@@ -1,0 +1,42 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\input{imports}
+\graphicspath{ {figures/} }
+\addbibresource{bibliography.bib}
+\renewcommand{\baselinestretch}{1.1}
+%====================================SETUP===============================================
+
+\pagestyle{fancy}
+%\fancyhead{}
+
+\newcommand{\changefont}{%
+    \fontsize{11}{12}\selectfont
+}
+%\fancyhead[L]{\fontsize{10}{12}}
+
+\fancyhead[LE,RO]{\changefont \slshape \rightmark} %section
+\fancyhead[RE,LO]{\changefont \slshape \leftmark} %chapter
+
+\hypersetup{%
+  colorlinks = true,
+  linkcolor  = black
+}
+%========================================================================================
+\begin{document}
+\input{chapters/titlepage}
+
+\chapter*{Abstract}
+\newpage
+
+\tableofcontents
+
+\include{chapters/introduction}
+\include{chapters/background}
+\include{chapters/related_work}
+\include{chapters/method}
+\include{chapters/analysis}
+
+
+\printbibliography
+
+\end{document}

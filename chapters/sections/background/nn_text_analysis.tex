@@ -1,0 +1,11 @@
+\section{Neural Networks for Text Analysis \label{sec: NNs for text}}
+    There are two key issues with using NNs for text-analysis:
+    
+    \begin{enumerate}
+    \item NNs require equal-length inputs, but words and sentences can have variable lengths.
+    \item NNs require $x_i \in X$ to be numbers, not words, sentences or characters. A simple map such as $a \rightarrow 1, b \rightarrow 2 \dots$ is worthless also, because words are arbitrary choices and don't have inherent meaning.
+    \end{enumerate}
+    
+
+    The first issue is addressed by recurrent neural networks, see Sec. \ref{ssec: RNNs}.
+    The second issue is addressed by so-called word-embeddings (Sec. \ref{ssec: word embeddings}) which lie at the heart of our project and NLP in general.

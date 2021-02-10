@@ -1,0 +1,54 @@
+\section{Conversation Analysis \label{sec: ca}}
+
+The analysis of the structure of conversations falls within the field of \textit{conversation analysis} (CA), a sub-field of linguistics. This section explores the key concepts from CA that we use for our work. 
+% CONVERSATION ANALYSIS FIRST
+    \subsection{Utterances \label{ssec: utterances}}
+        Within conversations, utterances are strings of words that begin and end with a clear pause. As an approximation, we are assuming that every utterance corresponds to a sentence and in this thesis, sentences and utterances are considered synonyms.
+    \subsection{Dialogue Acts \label{ssec: DAs}}
+        The atomic unit within CA is the \textit{dialogue act} (DA) (also known as \textit{speech act} outside the context of conversations). The DA describes the \textit{action} of an utterance. DAs can be split into categories such as questions, greetings, statements of politeness, statements of agreement etc. for our work, we use the SWBD-DAMSL tag-set of 42 dialogue acts featured in the SwDa corpus (see Sec. \ref{ssec: swda})\cite{fang2012annotation, swda}. The most common dialogue acts as well as their relative frequency is shown in table \ref{table: damsl das}.
+        
+        \begin{table}[t]
+        \begin{tabular}{|l|l|l|}
+        \hline
+            \textbf{SWBD-DAMSL}          & \textbf{Example}                                & \textbf{\%} \\ \hline
+            Statement-non-opinion        & Me, I'm in the legal department.                & 36\%        \\ \hline
+            Acknowledge (Backchannel)    & Uh-huh.                                         & 19\%        \\ \hline
+            Statement-opinion            & I think it's great                              & 13\%        \\ \hline
+            Agree/Accept                 & That's exactly it.                              & 5\%         \\ \hline
+            Abandoned or Turn-Exit       & So, -                                           & 5\%         \\ \hline
+            Appreciation                 & I can imagine.                                  & 2\%         \\ \hline
+            Yes-No-Question              & Do you have to have any special training?       & 2\%         \\ \hline
+            Non-verbal                   & {[}Laughter{]}, {[}Throat\_clearing{]}          & 2\%         \\ \hline
+            Yes answers                  & Yes.                                            & 1\%         \\ \hline
+            Conventional-closing         & Well, it's been nice talking to you.            & 1\%         \\ \hline
+            Uninterpretable              & But, uh, yeah                                   & 1\%         \\ \hline
+            Wh-Question                  & Well, how old are you?                          & 1\%         \\ \hline
+            No answers                   & No.                                             & 1\%         \\ \hline
+            Response Acknowledgement     & Oh, okay.                                       & 1\%         \\ \hline
+            Hedge                        & I don't know if I'm making any sense or not.    & 1\%         \\ \hline
+            Declarative Yes-No-Question  & So you can afford to get a house?               & 1\%         \\ \hline
+            Other                        & Well give me a break, you know.                 & 1\%         \\ \hline
+            Backchannel in question form & Is that right?                                  & 1\%         \\ \hline
+            Quotation                    & You can't be pregnant and have cats             & .5\%        \\ \hline
+            Summarize/reformulate        & Oh, you mean you went home.                     & .5\%        \\ \hline
+            Affirmative non-yes answers  & It is.                                          & .4\%        \\ \hline
+        \end{tabular}
+        \caption{The most common SWBD-DAMSL dialogue acts \cite{swda}. The third column is the fractional frequency of the DA within the SwDa corpus of short conversations (see Sec. \ref{ssec: swda}).}
+        \label{table: damsl das}
+        \end{table}
+
+    
+    \subsection{Adjacency Pairs \label{ssec: adjacency pairs}}
+        
+        In a conversation, speech acts are part of a greater cohesive structure. In CA, this is the structure of \textit{adjacency pairs}. Adjacency pairs are pairs of speech acts $(s_j, s_{j+1})$, in which the initial speech act with label $s_j$ is replied to by the response with label $s_{j+1}$. Examples include:
+        \begin{itemize}
+            \item (question, answer)
+            \item (greeting, greeting)
+            \item (request, denial)
+            \item (opinion, agreement) etc.
+        \end{itemize}
+    
+        A conversation, on the utterance level, is structured as a long string of such adjacency pairs.
+        
+    
+    
