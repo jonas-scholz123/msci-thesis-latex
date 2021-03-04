@@ -1,15 +1,15 @@
 \section{Machine Learning \label{sec: ML}}
     A traditional computer programme takes some inputs $X$, does something with those inputs and outputs some output $Y$. It can be thought of as a function $f: X \rightarrow Y$. The behaviour of that function $f$ is defined by the programmer.
     %, who specifies what the computer is supposed to do with $X$ to turn it into $Y$.
-    
-    %The objective of \gls{ml} is to \textit{learn} the behaviour of such a function $f$ statistically as $\hat{f}$. 
+
+    %The objective of \gls{ml} is to \textit{learn} the behaviour of such a function $f$ statistically as $\hat{f}$.
     In \gls{ml}, the behaviour of $\hat{f}$ is not implemented by a programmer, but statistically learned from data. $\hat{f}$ is called the \textbf{\gls{model}}. In practice, $\hat{f} = \hat{f}_\theta$ is highly flexible and its behaviour specified by a set of parameters $\theta$. These parameters are initially randomly assigned and then automatically tweaked until $\hat{f}_\theta$ shows the desired behaviour in a process called training (see Sec. \ref{ssec: training}).
-    
-    ML is useful in cases that have too many inputs to be implemented traditionally, such as image recognition or \gls{nlp}.
-    
+
+    \gls{ml} is useful in cases that have too many inputs to be implemented traditionally, such as image recognition or \gls{nlp}.
+
     \subsection{Supervised Learning}
-        In supervised learning, the machine learning algorithm is fed pairs $(X, Y)$ of inputs $X$ and matching outputs $Y$ that were labelled manually by humans. If, for example, one wanted to train a model that recognises cats, $X$ would be an image of a cat or an image not of a cat, and $Y$ would be the corresponding label \textit{cat} or \textit{not cat}. The algorithm uses $(X, Y)$ to iteratively compare its own prediction $\hat{f}_\theta(X) = \hat{Y}$ to the true output $Y$ and slightly adjusts its parameters $\theta$ to match that true output. This process is called training and the pairs of $(X, Y)$ accordingly are called training data. %There are many different approaches and implementations of the functions $\hat{f}_\theta$ and the training process. The type of $\hat{f}_\theta$ we use is called a \gls{nn} and it is trained through a process called backpropagation. We expand on this in section ???.
+        In supervised learning, the \gls{ml} algorithm is fed pairs $(X, Y)$ of inputs $X$ and matching outputs $Y$ that were labelled manually by humans. If, for example, one wanted to train a \gls{model} that recognises cats, $X$ would be an image of a cat or an image not of a cat, and $Y$ would be the corresponding label \textit{cat} or \textit{not cat}. The algorithm uses $(X, Y)$ to iteratively compare its own prediction $\hat{f}_\theta(X) = \hat{Y}$ to the true output $Y$ and slightly adjusts its parameters $\theta$ to match that true output. This process is called training and the pairs of $(X, Y)$ accordingly are called training data. %There are many different approaches and implementations of the functions $\hat{f}_\theta$ and the training process. The type of $\hat{f}_\theta$ we use is called a \gls{nn} and it is trained through a process called backpropagation. We expand on this in section ???.
         Supervised learning is the main flavour of \gls{ml} used for this project.
-        
+
     %\subsection{Unsupervised Learning}
         %In unsupervised learning, only the input data $X$ is provided (and no true labels $Y$). The \gls{ml} algorithm then uses some statistical techniques to provide some useful insights. The two main uses of unsupervised learning in this project are \gls{pca}, which reduces high-dimensional data to lower-dimensional data while trying to preserve similarity, and cluster analysis, which finds similarities within the datapoints $X$ and groups similar data-points together.
