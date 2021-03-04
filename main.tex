@@ -1,12 +1,33 @@
-\documentclass[12pt]{report}
+\documentclass[12pt, oneside]{book}
 \usepackage[utf8]{inputenc}
 \input{imports}
+\input{glossary}
+
+
+%WORD COUNT STUFF
+\newcommand{\detailtexcount}[1]{%
+  \immediate\write18{texcount -merge -sum -q #1.tex output.bbl > #1.wcdetail }%
+  \verbatiminput{#1.wcdetail}%
+}
+
+\newcommand{\quickwordcount}[1]{%
+  \immediate\write18{texcount -1 -sum -merge -q #1.tex output.bbl > #1-words.sum }%
+  \input{#1-words.sum} words%
+}
+
+\newcommand{\quickcharcount}[1]{%
+  \immediate\write18{texcount -1 -sum -merge -char -q #1.tex output.bbl > #1-chars.sum }%
+  \input{#1-chars.sum} characters (not including spaces)%
+}
+
+
 \graphicspath{ {figures/} }
 \addbibresource{bibliography.bib}
 \renewcommand{\baselinestretch}{1.1}
+
 %====================================SETUP===============================================
 
-\pagestyle{fancy}
+\setcounter{tocdepth}{1} % supress subsections from content
 %\fancyhead{}
 
 \newcommand{\changefont}{%
@@ -21,22 +42,74 @@
   colorlinks = true,
   linkcolor  = black
 }
+
+\setlength{\cftbeforetoctitleskip}{-40pt}
+\setlength{\cftaftertoctitleskip}{0pt} % make content fit on one page
+
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{40pt}
+
+ %make chapters not start a new page
+\makeatletter
+
+\renewcommand\chapter{%
+%   \if@openright\cleardoublepage\else\clearpage\fi
+  \vfil \penalty+9000 \vfilneg
+% Something from the following two lines could be retained:
+%   \thispagestyle{plain}%
+%   \global\@topnum\z@
+  \@afterindentfalse
+  \secdef\@chapter\@schapter
+}
+
+\patchcmd{\@makeschapterhead}{\vspace*{50\p@}}{\vspace*{-20\p@}}{}{}%
+
+
+\makeatother
+
+%\setglossarypreamble{\vspace*{-\baselineskip}}
+
 %========================================================================================
 \begin{document}
+
+%TC:ignore
+%\quickwordcount{main}
+%\quickcharcount{main}
+%\detailtexcount{main}
+%TC:endignore
+
+\renewcommand{\headrulewidth}{0pt}% Remove header rule
+\pagestyle{plain}
+%TC:ignore
 \input{chapters/titlepage}
 
-\chapter*{Abstract}
-\newpage
+%TC:endignore
+\input{chapters/abstract}
 
+%TC:ignore
 \tableofcontents
+\thispagestyle{empty}
+\printglossaries
 
-\include{chapters/introduction}
-\include{chapters/background}
-\include{chapters/related_work}
-\include{chapters/method}
-\include{chapters/analysis}
+\pagestyle{fancy}
+%644 too many words in wordcount
 
+%TC:endignore
+\input{chapters/introduction} % 400 words
+\input{chapters/background} % 3300 words
+\input{chapters/related_work} % 2000 words
+\input{chapters/dialogue_acts} % 1000 words
+\input{chapters/topics} % 2900 words
+\input{chapters/corpus}
+\input{chapters/conclusions} % 800 words
 
+%TC:ignore
+
+\renewcommand{\headrulewidth}{0pt}% Remove header rule in bibliography
+\pagestyle{plain}
+\Urlmuskip=0mu plus 1mu
+\emergencystretch=1em
 \printbibliography
-
+%TC:endignore
 \end{document}

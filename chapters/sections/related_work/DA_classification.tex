@@ -1,15 +1,17 @@
+
 \section{Dialogue Act Classification \label{ssec: da classification}}
-    Dialogue acts (see Sec. \ref{ssec: DAs}) are often applied within the context of adjacency pairs (see \ref{ssec: adjacency pairs}). They have been used to analyse performance appraisal interviews\cite{ap_interview}, predict psychological disorders such as depression or social anxiety\cite{ap_psychological} or analyse politician's speech patterns\cite{ap_trump}.
-    A lot of these are based on manually annotated transcriptions or are purely qualitative in nature. To automate DA annotation would make it significantly easier for researchers to process large data sets and quantify their findings. A model for classifying DAs could be written as 
+    %\Glspl{da} (see Sec. \ref{ssec: DAs}) are often applied within the context of adjacency pairs (see \ref{ssec: adjacency pairs}). They have been used to analyse performance appraisal interviews\cite{ap_interview}, predict psychological disorders such as depression or social anxiety\cite{ap_psychological} or analyse politician's speech patterns\cite{ap_trump}.
+    %A lot of these are based on manually annotated transcriptions or are purely qualitative in nature. To automate \gls{da} annotation would make it significantly easier for researchers to process large data sets and quantify their findings. 
+    All methods of extracting \glspl{da} rely on a \gls{ml} model for classification. Such a model for classifying \glspl{da} could be written as 
     \begin{equation}
         \hat{f}_{da}: u_i \rightarrow l_i,
     \end{equation}
-    where an utterance $u_i$ is mapped to a DA label $l_i$. Better models don't just map one utterance to one label, but consider the whole sequence of utterances $\mathcal{U}$ i.e.
+    where an utterance $u_i$ is mapped to a \gls{da} label $d_i$. Better models, however, don't just map one \gls{utterance} to one label, but consider the whole sequence of \glspl{utterance} $\mathcal{U}$ i.e.
     \begin{equation}
-        \hat{f}_{da}: \mathcal{U} \rightarrow \mathcal{L}, \hspace{3em} u_i \in \mathcal{U}, \hspace{0.5em} l_i \in \mathcal{L} \hspace{0.5em} \forall \hspace{0.5em} i.
+        \hat{f}_{da}: \mathcal{U} \rightarrow \mathcal{D}, \hspace{3em} u_i \in \mathcal{U}, \hspace{0.5em} d_i \in \mathcal{D} \hspace{0.5em} \forall \hspace{0.5em} i.
     \end{equation}
     
-    DA classification is an active area of research and different neural network architectures are proposed to improve model performance. State of the art models for DA classification are summarised in \cite{DAgithub}. The comparison is shown in table \ref{table: da models}.
+    To do this, all state of the art models use \glspl{rnn} (see Sec. \ref{ssec: RNNs}) to make their classifications. \Gls{da} classification is an active area of research and different combinations of \glspl{rnn} are proposed to improve model performance. State of the art models for \gls{da} classification are summarised by Ruder, 2021 \cite{DAgithub}. The comparison of state of the art models is shown in table \ref{table: da models}.
     
     \begin{table}[h]
     \centering
@@ -24,9 +26,12 @@
     Bi-LSTM-CRF                      & 79.2              & Kumar et al., 2017 \cite{kumar2017dialogue}  \\ \hline
     RNN with 3 utterances in context & 77.34             & Bothe et al., 2018 \cite{bothe2018context}  \\ \hline
     \end{tabular}
-    \caption{State of the art models and their accuracies. Trained and evaluated on the SwDa corpus. There was only 84\% agreement among human annotators of the SwDa corpus, so the best models are almost as accurate as humans.\cite{swda}.}
+    \caption{State of the art models and their accuracies. Trained and evaluated on the \gls{swda} corpus. There was only 84\% agreement among human annotators of the \gls{swda} corpus, so the best models are almost as accurate as humans.\cite{swda}.}
     \label{table: da models}
     \end{table}
     
+    \subsection{Switchboard Dialogue Act Corpus \label{ssec: swda}}
+        The \gls{swda} corpus is a collection of 1155 five-minute conversations between two participants, in which callers question receivers on pre-determined topics such as child care, recycling and new media.\cite{fang2012annotation}. It is transcribed by humans and annotated with \glspl{da} (see Sec. \ref{ssec: DAs}). It is commonly used as training data for classifiers and to evaluate said classifiers.
+    
     \subsection{Bi-LSTM-CRF \label{sssec: kumar model}}
-    For our work, we select the Bi-LSTM-CRF model\cite{kumar2017dialogue}, because of high model accuracy and because the authors released their source code. It combines a bidirectional recurrent network using LSTM neurons (see Sec. \ref{ssec: RNNs}) with a conditional random field (CRF) layer and word embeddings. Since we made changes to the model and re-implemented it, a more thorough explanation of the Bi-LSTM-CRF model along with a plot of the model (Fig. \ref{fig:kumar_model} can be found in the method section \ref{ssec: bi-lstm-crf} %TODO: Make CRF section
+    For our work, we select the Bi-LSTM-CRF model\cite{kumar2017dialogue}, because of relatively high model accuracy, relative model simplicity, and because the authors released their source code. It combines a bidirectional \glspl{rnn} using \gls{lstm} \glspl{neuron} (see Sec. \ref{ssec: RNNs}) with a \gls{crf} (see Sec. \ref{fig: HMM and CRF}) layer and word \glspl{embedding}. Since we made changes to the model and re-implemented it, a more thorough explanation of the Bi-LSTM-CRF model along with a plot of the structure of the model (Fig. \ref{fig:kumar_model}) can be found in Sec. \ref{method: kumar model}.

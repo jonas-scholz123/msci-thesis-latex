@@ -1,5 +1,39 @@
+\newpage
+\renewcommand{\headrulewidth}{0.5pt}% Re-enable header rule
 \chapter{Introduction}
-\section{The Intersection of Conversation Analysis and Natural Language Processing}
-Our project is at the intersection of CA and NLP, as we attempt to use NLP to do CA.
 
-\input{chapters/sections/introduction/conversations}
+%\subsubsection{The Development of Natural Language Processing}
+The rapid developments within the field of \gls{nlp} over the last decade and the exponential advances in computational performance\cite{mooresLaw} have made automated text analysis freely available and economical to use. \Gls{nlp} has since found wide commercial application, from sentiment analysis to gauge customer reviews or the optimism in financial markets\cite{sentimentReview} to virtual assistants, such as the Google assistant, Apple's Siri or Amazon's Alexa\cite{virtualAssistants}.
+
+While many applications were developed for commercial use, their implementations are often (relatively) simple to recreate using mature libraries such as Google's TensorFlow\cite{abadi2016tensorflow} or Facebook's PyTorch\cite{paszke2019pytorch}. This has allowed independent researchers to apply \gls{nlp} to a vast number of areas, such as the analysis of tweets to appropriately respond to mass emergencies (such as earthquakes)\cite{twitterEmergencies}, or the analysis of newspaper articles to identify media bias\cite{mediaBias}.
+
+\subsubsection{NLP for Conversation Analysis}
+Within the linguistic field of \gls{ca}, the use of \gls{nlp} is more limited. 
+Most existing research is not automated and requires researchers to manually annotate conversations with the linguistic features they are investigating, which is a time consuming and unrewarding process and severely limits the \textit{amount} of text that researchers can analyse. It also means that uncertainties are difficult to estimate as the researchers have to either estimate their own error rates in annotating the text, use multiple annotators to gain quantitative inter-annotator accuracies or not report uncertainties at all - non of which are ideal options.
+
+\subsubsection{Conversation Analysis at Scale}
+Initially, we aimed to begin filling the gap of using \gls{nlp} for conversation analysis, by applying existing \gls{nlp} methods to a large corpus of conversations held on podcasts from the public Spotify Podcast dataset\cite{clifton-2020100000} and analysing it statistically to gain insights into specific questions around conversation structure, such as \textit{what makes conversations interesting to an audience?} Specifically we wanted to investigate the (macroscopic) evolution of topics within a conversation and the (microscopic) structure of sentences and their responses by conversation members. Unfortunately, conversations are noisy: conversation members talk over each other, struggle to find the right words, use humour, sarcasm, slang, and analogies and as we evaluated existing \gls{nlp} methods, we found they were ill-equipped to deal with that fact (especially the \gls{nlp} tools used for modelling topics).
+
+\subsubsection{Improving and Adapting NLP for Conversations}
+Because of the disappointing performance of the \gls{nlp} methods we tested, we decided to shift our intentions from \textit{analysing conversations} using existing \gls{nlp} methods to \textit{improving} said methods and adapting them to conversations. We address two separate \gls{nlp} methods: \gls{da} classification and topic extraction.
+
+Specifically, to improve methods of \gls{da} classification (which we define in Sec. \ref{ssec: DAs}), we re-implement an existing language \gls{model} designed by a team at IBM Research\cite{kumar2017dialogue}, fix a bug, tweak it and modernise it to achieve state of the art performance.
+
+Secondly, within the topic extraction area, we hand-annotate conversation transcripts as a baseline for evaluation, quantify the performance of existing methods, identify key issues, and create a novel topic extraction algorithm that is more robust against said key issues.
+
+\subsubsection{An Annotated Corpus of Conversations}
+Finally, to enable future research into the linguistic questions we \textit{initially} aimed to answer, we annotate 18,000 conversation transcripts from the Spotify podcast dataset\cite{clifton-2020100000} with both topics and \glspl{da} using the methods we develop and publish it.
+
+\subsubsection{Applications}
+The applications of the algorithms we develop and improve in this thesis are numerous. Commercially, they can be used to make group meetings more productive by automating meeting minutes and summarising meetings, or by analysing the process of arriving at conclusions\cite{daApplications}, they can make interviewers, podcast hosts, and talk-show hosts more aware of what microscopic behaviours and which general topics lead to greater interest or they can improve the behaviour of the aforementioned virtual assistants by determining what the user wants\cite{daApplications}. Medically, some linguistic features that we automatically extract can be used to help diagnose mental illnesses such as social anxiety and depression\cite{ap_psychological}. 
+Within linguistics, the methods we improve can be applied for blue skies research e.g. of the speech patterns of politicians\cite{ap_trump} or the evaluation of movie dialogues\cite{movieDialogue}. \newline
+
+
+
+%\subsubsection{The Intersection of Conversation Analysis and Natural Language Processing}
+%Our project is at the intersection of \gls{ca} and \gls{nlp}, as we attempt to use \gls{nlp} to do \gls{ca}.
+
+%Initially, we wanted to apply \gls{nlp} methods to a large number of conversations to statistically determine what we call the \textit{bounds of conversation}, i.e. the things that all conversations have in common. We quickly found that the techniques commonly used in \gls{nlp} were not very effective when dealing with conversations, so we decided to shift the focus of this project to the improvement of existing \gls{nlp} techniques.
+
+%\input{chapters/sections/introduction/conversations}
+\glsresetall

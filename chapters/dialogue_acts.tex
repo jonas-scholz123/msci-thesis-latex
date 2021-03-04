@@ -1,0 +1,17 @@
+
+{\let\clearpage\relax \chapter[Dialogue Act Classification]{Improving Dialogue Act Classification}}
+%\chapter[Dialogue Act Classification]{Improving Dialogue Act Classification}
+%We have three aims:
+%\begin{enumerate}
+%    \item Evaluate and improve existing automated dialogue act classification.
+%    \item Evaluate and improve existing automated topic extraction method.
+%    %\item Apply improved methods to a large number of conversations to determine the (statistical) ``bounds" of conversations.
+%    \item Apply the improved methods to a large number of conversations to easily enable future work actually analysing said conversations.
+%\end{enumerate}
+
+\gls{da} classification is an active area of research, because it helps speech controlled devices (such as Google Home or Amazon Alexa) identify what the user wants\cite{daApplications}. We select an existing hierarchical bi-directional \gls{lstm} \gls{model} by Kumar et al.\cite{kumar2017dialogue} (for the reasons explained in Sec. \ref{sssec: kumar model}) and modernise it.
+
+%Sections ??? to ??? describes our methods and findings for the first aim, sections ??? to ??? for the second.
+
+\input{chapters/sections/method/da_classifier}
+\glsresetall

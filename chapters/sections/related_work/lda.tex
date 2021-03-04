@@ -1,0 +1,64 @@
+\section{Latent Dirichlet Allocation \label{ssec: LDA}}
+    \Gls{lda}\cite{blei2003latent} is the most common method for topic modelling. It was initially designed to model the topics of \textit{documents} within a \textit{corpus}, such as newspaper articles within an archive of newspapers. \gls{lda} is then capable of identifying words belonging to the same topic. The number of topics $k$ is a parameter of \gls{lda} and is set by the user.
+    Within the context of conversations, the \textit{documents} are the conversation transcripts and the \textit{corpus} is the set of all transcripts.
+    
+    \gls{lda} is a \textit{generative model}, which makes the following assumptions about how a document is generated: There are $k$ topics that any word can be about e.g. $k=3$, where the topics are music, cooking and politics. Each of these topics is made up by the following words with an associated probability of appearing:
+    \begin{align*}
+        \textbf{Music:  }& \text{[(rock, 1\%), (pop, 0.8\%), (Mozart, 0.4\%), (mp3, 0.2\%), (Beatles, 0.2\%), \dots]}\\
+        \textbf{Cooking:    }& \text{[(steak, 2.0\%), (dinner, 1.2\%), (knife, 1.0\%), (delicious, 0.6\%), \dots]}\\
+        \textbf{Politics:   }& \text{[(Senate, 2.2\%), (MP, 1.8\%), (Trump, 0.9\%), (debating, 0.3\%), \dots]}.
+    \end{align*} 
+     
+    Now, a document (such as a podcast transcript) is generated in the following way:
+     
+    \begin{enumerate}
+        \item Choose a length of the document e.g. 1000 words.
+        \item Choose a set of topics, as well as their probabilities of appearance within the document, e.g. \{(music, 80\%), (cooking, 20\%)\}
+    \end{enumerate}
+    
+    For each word:
+    \begin{enumerate}[leftmargin=6em]
+    \setcounter{enumi}{2}
+        \item A topic is randomly selected: with 80\% probability the topic is music with 20\% probability it is cooking.
+        \item From within that topic (say music), a random word is selected with its given probability, e.g. 1\% of the time, the word ``rock" is chosen.
+    \end{enumerate}
+    
+    The real model works \textbf{backwards} from these assumptions to compute the most likely parameters given the observed corpus.
+    Mathematically, \gls{lda} determines the parameters that are most likely to have generated the corpus by computing the probability of obtaining a given corpus $D$:
+    
+    \begin{equation}
+        p(D \mid \alpha, \beta)=\prod_{d=1}^{M} \int p\left(T_{d} \mid \alpha\right)\left(\prod_{n=1}^{N_{d}} \sum_{z_{d n}} p\left(z_{d n} \mid T_{d}\right) p\left(w_{d n} \mid z_{d n}, \beta\right)\right) d T_{d},
+    \end{equation}
+    
+    where $\alpha$ and $\beta$ are the parameters we would like to determine,
+    the first product is over all $M$ documents $d$,
+    the integral is over all possible sets (and probabilities) of topics $T_d$ included in $d$, 
+    the second product is over all $N_d$ words that document $d$ contains, where $w_n$ is the $n^{th}$ word.
+    The sum is over all topics $z_{dn}$, within $T_d$.
+    The term after the sum can be recognised as the probability of drawing the word $w_{dn}$ after drawing the topic $z_{dn}$, which originates in the generative nature of the model.
+    The term in the brackets is then the probability of drawing the entire document given that the random variable representing the set of topics is drawn to be $T_d$.
+    
+    Here, the parameter $\beta$ is a matrix containing the probabilities of every word to appear within every topic, and the parameter $\alpha$ is used as a parameter for drawing the set of topics $T_d$ from a Dirichlet distribution:
+    
+    \begin{equation}
+        p(T \mid \alpha)=\frac{\Gamma\left(\sum_{i=1}^{k} \alpha_{i}\right)}{\prod_{i=1}^{k} \Gamma\left(\alpha_{i}\right)} T_{1}^{\alpha_{1}-1} \cdots T_{k}^{\alpha_{k}-1},
+    \end{equation}
+    where $k$ is the number of topics and the $d$ in the subscript of $T_d$ is replaced by the topic label for clarity. $\alpha$ is a $k$-dimensional vector with elements $> 0$ and $\Gamma(x)$ is the Gamma function.
+    
+    Once the \gls{lda} model is trained (i.e. a steady state of topic assignments exists), every word can be assigned a topic.
+    
+    
+    \subsection{LDA for Topic Labelling \label{ssec: lda for segmentation}}
+    \gls{lda} is used for topic segmentation\cite{eisenstein2008bayesian, purver2006unsupervised, nguyen2012sits}, by checking how the topic distributions vary over time and placing a boundary between adjacent areas that show dissimilar distributions.
+    By simple majority of topics within a segment, the segment can be labelled with the most-frequent words within that topic.
+    
+    \subsection{Limitations}
+    \gls{lda} works very well when applied to similarly structured, similar length documents such as news articles\cite{blei2003latent, newman2006probabilistic} or scientific papers\cite{griffiths2004finding, wang2011collaborative}, but is known to struggle with documents that contain many topics, such as books\cite{tang2014understanding}. Other weaknesses that are relevant to conversations include:
+    \begin{itemize}
+        \item The number $k$ of topics is fixed and must be subjectively imposed.
+        \item Topics are uncorrelated as the Dirichlet topic distribution cannot capture correlations.
+        \item Bag of word model: temporal evolution of topics can not be modelled as only word \textbf{counts} across the whole document are considered.
+    \end{itemize}
+    
+    \subsection{LDA for Conversations \label{sssec: lda for conversations}}
+    Conversations are irregular. They can contain many topics or are focused on just one, every topics can be described by many fitting words or by very few and conversation lengths vary significantly. In conjunction with mis-transcribed words that dilute topics, these issues mean that the generative \gls{lda} model, that assumes all documents are generated by the same ``recipe" does not perform well in this medium\cite{purver2006unsupervised, tang2014understanding}. A modified generative approach based on \gls{lda} is proposed independently by both Purver et al.\cite{purver2006unsupervised} and Eisenstein et al.\cite{eisenstein2008bayesian}, both of which specifically apply it to multi-party spoken discourse from recorded business meetings aggregated in the ICSI-MRDA corpus \cite{shriberg2004icsi}. \newline

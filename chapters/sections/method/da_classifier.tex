@@ -1,21 +1,70 @@
-\section{Dialogue Act Analysis}
+    %One way to view the structure of conversations is as a long string of adjacent \glspl{da}. Tagging these \glspl{da} automatically is an active area of research, because it helps speech controlled devices (such as Google Home or Amazon Alexa) identify what the user wants. All state of the art methods (see Sec. \ref{ssec: da classification}) use \glspl{rnn} for this task. 
     
-    One way to view the structure of conversations is as a long string of adjacent dialogue acts (DAs).
-    \subsection{Training Data}
-        \subsubsection{SwDa}
-        \subsubsection{MrDa}
-    \subsection{Bi-LSTM-CRF \label{ssec: bi-lstm-crf}}
-        \subsubsection{Initial Model}
-        The model proposed in \cite{kumar2017dialogue} is a hierarchical Bi-LSTM-CRF model, which first encodes utterances using an embedding and LSTM layer and then uses these encoded utterances in a combination with another LSTM layer and a CRF layer to classify the dialogue acts of every utterance. The entire model is displayed in Fig. \ref{fig:kumar_model}.
+    %\gls{da} classification is an active area of research, because it helps speech controlled devices (such as Google Home or Amazon Alexa) identify what the user wants\cite{daApplications}. We select an existing hierarchical bi-directional \gls{lstm} \gls{model} by Kumar et al.\cite{kumar2017dialogue} (for the reasons explained in Sec. \ref{sssec: kumar model}) and modernise it.
+    
+    \section{Training Data}
+    To train \glspl{nn}, a set of training data of \glspl{utterance} $\mathcal{U}$ with their correctly labelled \glspl{da} $\mathcal{Y}$ is required. The two datasets that are commonly used in the literature are the \gls{swda} corpus (see Sec. \ref{ssec: swda}) and the Meeting Recorder Dialogue Dct (MRDa) corpus\cite{shriberg2004icsi}. We limit ourselves to the \gls{swda} corpus, because we believe the style of conversations in the \gls{swda} corpus to more closely resemble \textit{natural} conversations than the meeting transcriptions in the MRDA corpus.
+    
+    \section{Initial Model \label{method: kumar model}}
+    The \gls{model} proposed in \cite{kumar2017dialogue} is a hierarchical Bi-LSTM-CRF \gls{model}, which first encodes \glspl{utterance} using an \gls{embedding} and \gls{lstm} layer and then uses these encoded \glspl{utterance} in a combination with another \gls{lstm} layer and a \gls{crf} layer to classify the Dialogue Act of every \gls{utterance}. The entire \gls{model} architecture is displayed in Fig. \ref{fig:kumar_model}.
+    
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{kumar.pdf}
+        \caption{a) $N$ \glspl{utterance} $u_i$ are input into the \gls{model} as b) a list of words $w_1 \dots w_{n_i}$. In c), the words are individually embedded into vectors $\mathbf{w_j}$ (see Sec. \ref{ssec: word embeddings}). The first Bi-\gls{rnn} layer (on the word level), d), combines all $n_i$ words within $u_i$ into two vectors of numbers, one for the ``forward" direction and one for the ``backward" direction of the \gls{rnn} (see Sec. \ref{ssec: bidirectional RNN}). In e), these vectors are concatenated into one vector $\mathbf{u_i}$ that can be understood as the \gls{embedding} of the \gls{utterance} $u_i$. In f), these \gls{utterance} \glspl{embedding} are again combined using a bi-directional \gls{rnn} layer, but this time not just the two final states of the ``forward" and ``backward" direction are passed on, but all hidden states $h_i$ are (see Sec. \ref{ssec: outputting hidden states}). In g), a CRF layer (see Sec. \ref{fig: HMM and CRF}) makes the final classification, which is the sequence of \glspl{da} $\text{DA}_i$ associated with \glspl{utterance} $u_i$ shown in h).}
+        \label{fig:kumar_model}
+    \end{figure}
         
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=\textwidth]{kumar.pdf}
-            \caption{a) $N$ utterances $u_i$ are input into the model as b) a list of words $w_1 \dots w_{n_i}$. In c), the words are individually embedded into vectors $\mathbf{w_j}$ (see Sec. \ref{ssec: word embeddings}). The first Bi-RNN layer (on the word level), d), combines all $n_i$ words within $u_i$ into two vectors of numbers, one for the ``forward" direction and one for the ``backward" direction of the RNN (see Sec. \ref{ssec: bidirectional RNN}). In e), these vectors are concatenated into one vector $\mathbf{u_i}$ that can be understood as the embedding of the utterance $u_i$. In f), these utterance embeddings are again combined using a bi-directional RNN layer, but this time not just the two final states of the ``forward" and ``backward" direction are passed on, but all hidden states $h_i$ are (see Sec. \ref{ssec: outputting hidden states}). In g), a CRF layer makes the final classification, which is the sequence of dialogue acts $\text{DA}_i$ associated with utterances $u_i$ shown in h).}
-            \label{fig:kumar_model}
-        \end{figure}
+    \section{New Implementation}
+        The code made public by the researchers is unfortunately not functional and as it is written in an outdated framework (tensorflow 1.3.0) for python, we were unable to fix the bugs. We therefore re-implement the \gls{model} in the more modern keras library CITE which is a high-level library that makes the low-level tensorflow 2.3.0 library more easily accessible. Our code is published on ??? (can not include name!).
         
-        \subsubsection{New Implementation}
-        \subsubsection{Memory Problems}
-        \subsubsection{Improved Results}
-        \subsubsection{Bi-GRU-CRF}
+    \section{Memory Problems}
+        Due to limited resources, we ran the training and prediction process on a personal computer on a single NVIDIA GTX 1660Ti graphics card. This graphics card only has 6GB of internal memory, and because the \gls{model} needs to be able to handle conversations of up to 3000 sentences each up to 150 words of length, the storage used by the number of parameters of the \gls{model} far exceeds these 6GB ($\approx$25GB are required). We fix this issue by making the following assumption: The context of sentences matter, but only to an extent. It is unlikely that a \gls{da} of a sentence spoken 100 sentences ago, $DA_{i}$ ago impacts the \gls{da} classification of  $DA_{i + 100}$. Thus we split the text into chunks of 100 sentences, classify these chunks and re-assemble them.
+    
+        \subsubsection{Boundary Effects}
+            The chunking process leads to unwanted boundary effects: at the boundary of each chunk, the \gls{model} loses the previous (or following) sentence's information. The context is lost. To mitigate this, we introduce a novel method of re-assembly of chunks. We don't only classify a chunk, say $u_{i}$ to $u_{i + 100}$, we also classify an offset chunk, say $u_{i + 50}$ to $u_{i + 150}$. We then re-assemble the classified chunks in a way that ensures that no \textbf{final} classification was made near a false boundary. The process is illustrated in Fig. \ref{fig:chunking process}. Given that we obtain the same accuracy as reported by Kumar et al. ($79.2 \pm 0.3\%$)\cite{kumar2017dialogue} using this method, it is clear that our assumption holds and this method does not significantly diminish the \gls{model}'s accuracy.
+        
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{figures/chunks.pdf}
+        \caption{The \glspl{utterance} are split into chunks of 100 twice: once starting at 0 (blue) and once offset, starting at 50 (orange). We classify each chunk independently and overlay them for the final classification so that each of the final \glspl{da} was classified as far from an artificial boundary as possible to minimise context information loss at boundaries.}
+        \label{fig:chunking process}
+    \end{figure}
+        
+    \section{Fixing Tokenisation Bug}
+        After we re-implemented the \gls{model}, we achieve the accuracy of $79.2\% \pm 0.3\%$ that is reported by Kumar et al. However, we found a bug in the implementation which leads to some missed words and to some ends of sentences to be wrongly discarded: To embed an \gls{utterance}, it must first be split into its constituent words. Kumar et al. split the text on whitespace only, which leads to trailing punctation. For example, the sentence
+        \begin{equation*}
+            \text{Is that house's roof green?}
+        \end{equation*}
+        Gets split into the following tokens:
+        \begin{equation*}
+            \text{[Is, that, \color{red} house's, \color{black} roof, \color{red} green? \color{black}]}
+        \end{equation*}
+        The red tokens are not recognised as words within the pretrained \glspl{embedding} and their information is therefore lost. We fix this bug by splitting the same sentence in the following way:
+        \begin{equation*}
+            \text{[Is, that, house, ', s, roof, green, ?]}
+        \end{equation*}
+        The punctuation, as well as the single ``s" have its own \glspl{embedding} which leads to two improvements:
+        \begin{enumerate}
+            \item Words are no longer made invalid by the punctuation.
+            \The information that the punctuation itself carries is now propagated to the \gls{model}.
+        \end{enumerate}
+        This change increases the \gls{model}'s accuracy to $81.0\% \pm 0.3\%$.
+        
+
+    
+    \section{Changing Embeddings} 
+    We change the \glspl{embedding} from \gls{glove} \glspl{embedding} used by Kumar et al.\cite{kumar2017dialogue} to the more sophisticated ConceptNet Numberbatch \glspl{embedding} (see Sec. \ref{fig: conceptnet}). We also allow the \gls{model} to change the \glspl{embedding} (via training) which optimises these general purpose \glspl{embedding} within this specific context of \gls{da} classification.
+    
+    \subsection{Modernising RNN cells}
+    Kumar et al.\cite{kumar2017dialogue} use \gls{lstm} cells (see Sec. \ref{ssec: rnn architectures}) as the components of their \gls{rnn} layers. We instead use the more modern \gls{gru}\cite{chung2014empirical} neurons (see Sec. \ref{ssec: rnn architectures}), which require less time to train and are less prone to overfitting (an issue of machine learning models, in which the \gls{model} is too sensitive and understands random noise in the training data as a pattern leading to worse performance on unseen data)\cite{chung2014empirical}.
+    
+    \section{Evaluation \label{ssec: method my da model evaluation}}
+    
+    To evaluate our final \gls{model}, we randomly split the \gls{swda} data into 90\% training data and 10\% test data. The \gls{model} is trained only on the training data and only evaluated on the test data as is standard practice when evaluating any machine learning \gls{model} CITE. This process ensures that the \gls{model} has not seen the evaluation data (simulating the real application of the \gls{model}) leading to an unbiased accuracy measurement.
+    Our final \gls{model}, which is the \gls{model} introduced by Kumar et al.\cite{kumar2017dialogue} with a fixed bug, using improved word \glspl{embedding}, and more modern \gls{rnn} components outperforms the original \gls{model} so significantly that it is currently the state of the art \gls{da} classification \gls{model}, achieving an accuracy of 
+    \begin{equation}
+        \text{accuracy} = 84.6 \% \pm 0.3\%,
+        \label{eq: my da model accuracy}
+    \end{equation}
+    showing a greater accuracy than the (much more complex) previous state of the art \gls{model} by Ravi et al. at 83.1\%\cite{ravi2018self}. Perhaps more significantly, the humans that originally annotated the \gls{swda} corpus only had 84\% agreement\cite{swda}- meaning that this \gls{model} is as good as (if not slighly bettter than) individual humans at labelling \glspl{da}. \newline

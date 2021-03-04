@@ -1,0 +1,57 @@
+    \section{Keyphrase Extraction \label{ssec: keyphrase extraction}}
+    One labelling approach is the extraction of \glspl{keyphrase} (single or multi-word expressions that represent the main topics of a text) from the segmented sections\cite{hasan2014automatic}. The extracted \glspl{keyphrase} (such as all nouns) represent the topic of the section.
+    
+    There are many \gls{keyphrase} extraction methods, the one we evaluate is a graph-based model called TopicRank\cite{bougouin-etal-2013-topicrank}. Here, \gls{keyphrase} candidates are extracted as noun phrases (phrases that grammatically act like nouns), such as:
+    
+    \begin{itemize}
+        \item \textbf{The spotted puppy} is up for adoption.
+        \item \textbf{The car wash} was out of order.
+        \item She kindly offered water to \textbf{the gardener working in the hot sun.}
+    \end{itemize}
+    
+    These phrases are identified using part of speech tagging.
+        \subsection{Part of Speech Tagging \label{sssec: POS tagging}}
+        
+        \Gls{pos} taggers are models 
+        \begin{equation}
+          \hat{f}_{\text{pos}}: \mathcal{S} \rightarrow \mathcal{P},
+        \end{equation} 
+        that label sequences of words $\mathcal{S}$(such as the words in a sentence) with their appropriate grammatical function $\mathcal{P}$, known as their part of speech tag. For example:
+        
+        \begin{equation*}
+        \text{[The, house, is, green] $\rightarrow$ [article, noun, verb, adjective]}.
+        \end{equation*}
+        This tagging problem is approached almost exactly like the \gls{da} tagging from Sec. \ref{ssec: da classification}.
+        
+        
+        \subsection{Topic Clustering}
+        
+        \Gls{keyphrase}-candidates are grouped into ``topics" if they share at least 25\% of words, excluding stop-words (which are words that don't add meaning, such as ``the").\cite{bougouin-etal-2013-topicrank}
+        
+        \subsection{Graph-Based Ranking}
+        After \gls{keyphrase}-candidates $c_i$ are extracted, the whole document is represented by a complete graph $G = (V, E)$, in which the vertices $V$ are topics $t_i$ and edges $E$ between two topics $t_i$ and $t_j$ are weighted according to the strength of their semantic relation. Here, two topics have a strong semantic relation if they appear close to each other in the document. Formally, the weights are defined to be
+            \begin{align}
+                w_{i, j} &=\sum_{c_{i} \in t_{i}} \sum_{c_{j} \in t_{j}} \operatorname{dist}\left(c_{i}, c_{j}\right) \\
+                \operatorname{dist}\left(c_{i}, c_{j}\right) &=\sum_{p_{i} \in \operatorname{pos}\left(c_{i}\right)} \sum_{p_{j} \in \operatorname{pos}\left(c_{j}\right)} \frac{1}{\left|p_{i}-p_{j}\right|},
+            \end{align}
+        where pos$(c_i)$ represents all the offset positions (i.e. indices) of the candidate \gls{keyphrase} $c_i$ within the document.
+        
+        The topics are then ranked according to the concept of ``voting": high-scoring topics contribute more to the score $S(t_j)$ of their connected topics $t_j$:
+        
+        \begin{equation}
+            S\left(t_{i}\right)=(1-\lambda)+\lambda \sum_{t_{j} \in V_{i}} \frac{w_{j, i} S\left(t_{j}\right)}{\sum_{t_{k} \in V_{j}} w_{j, k}},
+        \end{equation}
+        where $V_i$ are the topics voting for $t_i$ and $\lambda$ is a damping factor.
+        
+        \subsection{Extracting the Topic-phrase}
+        For each topic, only the most representative \gls{keyphrase} candidate is selected as the phrase representing the topic. This topic-phrase is extracted for every topic $t_i$ by one of three different methods:
+        \begin{enumerate}
+            \item The \gls{keyphrase} candidate that appears first in the document is the topic-phrase.
+            \item The most frequent \gls{keyphrase} candidate is the topic-phrase.
+            \item The centroid of all candidates within $t_i$, which is defined to be the candidate most similar to all other candidates is the topic-phrase.\cite{bougouin-etal-2013-topicrank}
+        \end{enumerate}
+    
+    The final topic labels are then defined by the topic-phrases above some minimum rank contained within the segment. This threshold allows the user to define a sensitivity for what constitutes a topic and what does not.
+    
+        %\subsection{Limitations}
+        %Similarly to \gls{lda}, TopicRank performs very well when applied to well-structured data such as journal papers, but is not evaluated for conversations.\cite{bougouin-etal-2013-topicrank}

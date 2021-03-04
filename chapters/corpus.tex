@@ -1,0 +1,16 @@
+{\let\clearpage\relax \chapter[Annotated Corpus]{Corpus of Annotated Conversations}}
+
+We apply our improved \gls{da} classification and topic extraction methods to 18,000 conversations randomly selected from the Spotify podcast corpus\cite{clifton-2020100000}. By annotating the transcript with the extracted linguistic features.
+
+\section{Selection of Podcasts}
+We select only podcasts with more than one speaker and of a minimum length of 100 \glspl{utterance}.
+
+\section{Computational Optimisation}
+We optimise our annotation of transcripts by caching language models and intermediate results such as inter-keyword similarity in our topic extraction algorithm \gls{geek}.
+We make the processing of transcripts multi-threaded and split the work-load between the graphical processing unit (GPU) and the central processing unit (CPU), because the graphical memory available for the GPU is limited and the cached models are large. This allows us to process three transcripts at once, at an average rate of $\approx 0.2$ transcripts/second leading to a total processing time of $\approx 25$ hours.
+
+We are confident our implementation can not be optimised much further because more than $96\%$ of the computation times is used by the libraries we use (deep learning library keras CITE for \gls{da} classification and \gls{nlp} library flairNLP\cite{flairNLP}), and our system uses all available memory to store essential components.
+
+\section{Access to Corpus}
+
+As the Spotify podcast data-set requires approval for access, we can only provide our annotated corpus to researchers who have already been approved for said data-set. \newline

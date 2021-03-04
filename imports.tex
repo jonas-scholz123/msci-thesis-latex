@@ -28,6 +28,10 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{dsfont}
+\usepackage{tocloft}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+
 \usepackage{epstopdf} % automatically replace .eps with .pdf in graphics
 \usepackage{backref} % needed for citations
 \usepackage{array}
@@ -45,6 +49,9 @@
 \usepackage{booktabs}
 \usepackage{ragged2e}
 \usepackage{tabularx}
+\usepackage{glossaries}
+\usepackage{verbatim}
+\usepackage{float}
 
 
 
@@ -55,7 +62,7 @@
     \begin{minipage}{\textwidth}
     #2
     \end{minipage}
-  \right.\nulldelimiterspace=0pt$}\par\smallskip
+  \right.\nulldelimiterspace=0pt$}\smallskip
 }
 
 \newcommand*{\myrulefill}[3][]{%
