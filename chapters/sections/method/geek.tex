@@ -3,7 +3,7 @@
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{geek.pdf}
-        \caption{A toy example showing how GEEK works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The key-words are matched with similar nearby \glspl{keyphrase}. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
+        \caption{A toy example showing how GEEK works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase}. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
         d) The topics are the \glspl{keyphrase} in connected components in the graph. They range from the earliest \gls{keyphrase} occurence to the latest. The meaning of the final topic is influenced by all connected \glspl{keyphrase} (shown here as colour mixing).
         }
         \label{fig:geek architecture}
@@ -30,7 +30,7 @@ GEEK is based on the following assumptions:
         \begin{tabularx}{0.9\textwidth}{| t | b | t |}
         \hline
         \textbf{Symbol} & \textbf{Description} & \textbf{Chosen Value} \\ \hline
-        $\Delta_{\text{max}}$     & The maximum gap between matching key-words for them to be considered in the same segment & 11                    \\ \hline
+        $\Delta_{\text{max}}$     & The maximum gap between matching \glspl{keyphrase} for them to be considered in the same segment & 11                    \\ \hline
         $\eta_{\text{min}}$     & The minimum cosine similarity of two word \glspl{embedding} for their words to be considered similar. & 0.55                        \\ \hline
         $T_{\text{min}}$ & Minimum number of \glspl{utterance} a topic must span. & 3 \\ \hline
 
