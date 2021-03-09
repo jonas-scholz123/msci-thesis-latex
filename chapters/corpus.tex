@@ -6,7 +6,7 @@ We apply our improved \gls{da} classification and topic extraction methods to 18
 We select only podcasts with more than one speaker and of a minimum length of 100 \glspl{utterance}.
 
 \section{Computational Optimisation}
-We optimise our annotation of transcripts by caching language \glspl{model} and intermediate results such as inter-keyword similarity in our topic extraction algorithm \gls{geek}.
+We optimise our annotation of transcripts by caching language \glspl{model} and intermediate results such as inter-\gls{keyphrase} similarity in our topic extraction algorithm \gls{geek}.
 We make the processing of transcripts multi-threaded and split the work-load between the graphical processing unit (GPU) and the central processing unit (CPU), because the graphical memory available for the GPU is limited and the cached \glspl{model} are large. This allows us to process three transcripts at once, at an average rate of $\approx 0.2$ transcripts/second leading to a total processing time of $\approx 25$ hours.
 
 We are confident our implementation can not be optimised much further because more than $96\%$ of the computation times is used by the libraries we use (deep learning library keras CITE for \gls{da} classification and \gls{nlp} library flairNLP\cite{flairNLP}), and our system uses all available memory to store essential components.

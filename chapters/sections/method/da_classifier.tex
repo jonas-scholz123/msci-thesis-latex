@@ -6,7 +6,20 @@
     To train \glspl{nn}, a set of training data of \glspl{utterance} $\mathcal{U}$ with their correctly labelled \glspl{da} $\mathcal{Y}$ is required. The two datasets that are commonly used in the literature are the \gls{swda} corpus (see Sec. \ref{ssec: swda}) and the Meeting Recorder Dialogue Dct (MRDa) corpus\cite{shriberg2004icsi}. We limit ourselves to the \gls{swda} corpus, because we believe the style of conversations in the \gls{swda} corpus to more closely resemble \textit{natural} conversations than the meeting transcriptions in the MRDA corpus.
 
     \section{Initial Model \label{method: kumar model}}
-    The \gls{model} proposed in \cite{kumar2017dialogue} is a hierarchical Bi-LSTM-CRF \gls{model}, which first encodes \glspl{utterance} using an \gls{embedding} and \gls{lstm} layer and then uses these encoded \glspl{utterance} in a combination with another \gls{lstm} layer and a \gls{crf} layer to classify the \gls{da} of every \gls{utterance}. The entire \gls{model} architecture is displayed in Fig. \ref{fig:kumar_model}.
+    
+    \begin{table}[h]
+    \centering
+        \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Hyperparameter}      & \textbf{Value} \\ \hline
+        Nr of Consecutive RNN Layers & 1              \\ \hline
+        Nr of RNN Neurons per Layer  & 300            \\ \hline
+        Learning Rate $\alpha$       & 1.0            \\ \hline
+        Dropout Rate                 & 0.2            \\ \hline
+        \end{tabular}
+        \caption{\label{table: da hyperparams} The hyperparameters used in the initial model. }
+    \end{table}
+    The \gls{model} proposed by IBM Research in \cite{kumar2017dialogue} is a hierarchical Bi-LSTM-CRF \gls{model}, which first encodes \glspl{utterance} using an \gls{embedding} and \gls{lstm} layer and then uses these encoded \glspl{utterance} in a combination with another \gls{lstm} layer and a \gls{crf} layer to classify the \gls{da} of every \gls{utterance}. The entire \gls{model} architecture is displayed in Fig. \ref{fig:kumar_model}. The exact specifications of the model, the hyperparamters, are shown in Table \ref{table: da hyperparams}. The hyperparameter \textit{dropout rate} is a parameter of \gls{rnn} \glspl{neuron} --- during training, with probability equal to the dropout rate, a \gls{neuron} does not fire even though it should. Dropout makes the training process more robust and is disabled in actual predictions\cite{mlTextbook}.
 
     \begin{figure}[h]
         \centering
@@ -16,7 +29,7 @@
     \end{figure}
 
     \section{New Implementation}
-        The code made public by the researchers is unfortunately not functional and as it is written in an outdated framework (tensorflow 1.3.0) for python, we were unable to fix the bugs. We therefore re-implement the \gls{model} in the more modern keras library CITE which is a high-level library that makes the low-level tensorflow 2.3.0 library more easily accessible. Our code is published on ??? (can not include name!).
+        The code made public by the researchers is unfortunately not functional and as it is written in an outdated framework (TensorFlow 1.3.0\cite{tensorflow2015-whitepaper}) for python, we were unable to fix the bugs. We therefore re-implement the \gls{model}, with the same hyperparameters, in the more modern Keras library\cite{chollet2015keras} which is a high-level library that makes the low-level TensorFlow 2.3.0 library more easily accessible. Our code is published on ??? (can not include name!).
 
     \section{Memory Problems}
         Due to limited resources, we ran the training and prediction process on a personal computer on a single NVIDIA GTX 1660Ti graphics card. This graphics card only has 6GB of internal memory, and because the \gls{model} needs to be able to handle conversations of up to 3000 sentences each up to 150 words of length, the storage used by the number of parameters of the \gls{model} far exceeds these 6GB ($\approx$25GB are required). We fix this issue by making the following assumption: The context of sentences matter, but only to an extent. It is unlikely that a \gls{da} of a sentence spoken 100 sentences ago, $DA_{i}$ ago impacts the \gls{da} classification of  $DA_{i + 100}$. Thus we split the text into chunks of 100 sentences, classify these chunks and re-assemble them.
@@ -31,7 +44,7 @@
         \label{fig:chunking process}
     \end{figure}
 
-    \section{Fixing Tokenisation Bug}
+    \section{Fixing Tokenisation Bug \label{sec: method tokenisation bug}}
         After we re-implemented the \gls{model}, we achieve the accuracy of $79.2\% \pm 0.3\%$ that is reported by Kumar et al. However, we found a bug in the implementation which leads to some missed words and to some ends of sentences to be wrongly discarded: To embed an \gls{utterance}, it must first be split into its constituent words. Kumar et al. split the text on whitespace only, which leads to trailing punctation. For example, the sentence
         \begin{equation*}
             \text{Is that house's roof green?}
@@ -47,7 +60,7 @@
         The punctuation, as well as the single ``s" have its own \glspl{embedding} which leads to two improvements:
         \begin{enumerate}
             \item Words are no longer made invalid by the punctuation.
-            \The information that the punctuation itself carries is now propagated to the \gls{model}.
+            \item The information that the punctuation itself carries is now propagated to the \gls{model}.
         \end{enumerate}
         This change increases the \gls{model}'s accuracy to $81.0\% \pm 0.3\%$.
 
@@ -60,6 +73,13 @@
     Kumar et al.\cite{kumar2017dialogue} use \gls{lstm} cells (see Sec. \ref{ssec: rnn architectures}) as the components of their \gls{rnn} layers. We instead use the more modern \gls{gru}\cite{chung2014empirical} \glspl{neuron} (see Sec. \ref{ssec: rnn architectures}), which require less time to train and are less prone to overfitting (an issue of \gls{ml} models, in which the \gls{model} is too sensitive and understands random noise in the training data as a pattern leading to worse performance on unseen data)\cite{chung2014empirical}.
 
     \section{Evaluation \label{ssec: method my da model evaluation}}
+    
+    \begin{figure}[t!]
+        \centering
+        \includegraphics[width=\textwidth]{confusion_gru.pdf}
+        \caption{The confusion matrix of our final \gls{da} classifier showing the 10 most frequent \glspl{da}. The field in row $i$ with label $d_i$ and column $j$ with label $d_j$ shows the percentage of \glspl{utterance} with true labels $d_i$ being classified as label $d_j$. The diagonal entries represent the percentage of correctly labelled \glspl{utterance}. Uncertainties are of order $0.1\%$ (varying across \gls{da} categories based on frequencies within the test data) and are excluded for clarity.}
+        \label{fig:confusion}
+    \end{figure}
 
     To evaluate our final \gls{model}, we randomly split the \gls{swda} data into 90\% training data and 10\% test data. The \gls{model} is trained only on the training data and only evaluated on the test data as is standard practice when evaluating any \gls{ml} \gls{model} CITE. This process ensures that the \gls{model} has not seen the evaluation data (simulating the real application of the \gls{model}) leading to an unbiased accuracy measurement.
     Our final \gls{model}, which is the \gls{model} introduced by Kumar et al.\cite{kumar2017dialogue} with a fixed bug, using improved word \glspl{embedding}, and more modern \gls{rnn} components outperforms the original \gls{model} so significantly that it is currently the state of the art \gls{da} classification \gls{model}, achieving an accuracy of
@@ -67,4 +87,6 @@
         \text{accuracy} = 84.6 \% \pm 0.3\%,
         \label{eq: my da model accuracy}
     \end{equation}
-    showing a greater accuracy than the (much more complex) previous state of the art \gls{model} by Ravi et al. at 83.1\%\cite{ravi2018self}. Perhaps more significantly, the humans that originally annotated the \gls{swda} corpus only had 84\% agreement\cite{swda}- meaning that this \gls{model} is as good as (if not slighly bettter than) individual humans at labelling \glspl{da}. \newline
+    showing a greater accuracy than the (much more complex) previous state of the art \gls{model} by Ravi et al. at 83.1\%\cite{ravi2018self}. Perhaps more significantly, the humans that originally annotated the \gls{swda} corpus only had 84\% agreement\cite{swda}--- meaning that this \gls{model} is as good as (if not slighly bettter than) individual humans at labelling \glspl{da}. 
+    
+    The complete confusion matrix, detailing the model's accuracy for every \gls{da}-type (and the confusion thereof) is shown in Fig. \ref{fig:confusion}. From it, we can identify remaining weaknesses. For example, in $19\%$ of cases, the model confuses \glspl{da} \textit{Statement-opinion} as \textit{Statement-non-opinion}, which can be explained by the difficulty in determining whether a speaker presents a fact in an utterance or is presenting an opinion with conviction (a mistake that humans can also make). Similarly, it confuses \textit{Agreements}, \textit{Acknowledgements}, \textit{Yes answers} and \textit{Appreciations}. Overall, there is no category in which our classifier performs unexpectedly poorly. We specifically draw attention to the $89 \%$ accuracy in \textit{Yes-No-Questions questions} and $91\%$ accuracy in \textit{Wh-Questions}, which significantly out-performs the original model at $79.8\%$ and $78.2\%$ respectively\cite{kumar2017dialogue}. We believe this discrepancy to be due to the tokenisation bug described in Sec. \ref{sec: method tokenisation bug}, which deletes the information carried by question marks. \newline
