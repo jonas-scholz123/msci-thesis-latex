@@ -3,15 +3,15 @@
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{geek.pdf}
-        \caption{A toy example showing how GEEK works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase} and the range of their effect is determined. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
+        \caption{A toy example showing how \gls{geek} works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase} and the range of their effect is determined. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
         d) The topics are the \glspl{keyphrase} in connected components in the graph. They range from the earliest \gls{keyphrase} occurence to the latest. The meaning of the final topic is influenced by all connected \glspl{keyphrase} (shown here as colour mixing).
         }
         \label{fig:geek architecture}
     \end{figure}
 
-We use the TopicRank approach and build upon it to develop an algorithm that both segments and labels topics. We call this improved algorithm the \gls{geek}. \gls{geek} extracts \glspl{keyphrase}, but uses \glspl{embedding} to achieve a better selection than TopicRank. It then uses embedding-based similarity to determine cohesive sections of the transcript. An example of how GEEK works is shown in Fig. \ref{fig:geek architecture}.
+We use the TopicRank approach and build upon it to develop an algorithm that both segments and labels topics. We call this improved algorithm the \gls{geek} algorithm. \gls{geek} extracts \glspl{keyphrase}, but uses \glspl{embedding} to achieve a better selection than TopicRank. It then uses embedding-based similarity to determine cohesive sections of the transcript. An example of how \gls{geek} works is shown in Fig. \ref{fig:geek architecture}.
 
-GEEK is based on the following assumptions:
+\gls{geek} is based on the following assumptions:
 
 \begin{enumerate}
     \item Topics are described by a small number of \glspl{keyphrase}. We assume \glspl{keyphrase} to exclusively be nouns, proper nouns and named entities, such as \textit{family}, \textit{music}, \textit{Donald Trump, the CIA} or \textit{Tesla}.
@@ -103,21 +103,21 @@ GEEK is based on the following assumptions:
                 \label{fig:GEEK segment}
         \end{figure}
 
-        Using this approximation, GEEK achieves a state of the art windowDiff score of
+        Using this approximation, \gls{geek} achieves a state of the art windowDiff score of
         \begin{equation}
             w_d = 0.22 \pm 0.04.
         \end{equation}
 
 
     \subsubsection{Labelling}
-        We evaluate extracted topic labels in the same way we evaluated TopicRank \glspl{keyphrase} (Sec. \ref{method: topic rank}), with the small modification that multi-word topics match if any constituent words match the human annotation. This modification is small because multi-word topics already contain very similar words. GEEK achieves an accuracy of
+        We evaluate extracted topic labels in the same way we evaluated TopicRank \glspl{keyphrase} (Sec. \ref{method: topic rank}), with the small modification that multi-word topics match if any constituent words match the human annotation. This modification is small because multi-word topics already contain very similar words. \gls{geek} achieves an accuracy of
         \begin{equation}
             0.72 \pm 0.12,
         \end{equation}
         which is a significant improvement over TopicRank (see Eq. \ref{eq: topic rank accuracy}). It should be noted that only one author annotated selected \glspl{keyphrase}, which is a subjective task. It is expected that \gls{geek}'s accuracy is thus somewhat biased as its assumptions align more with the author's assumptions than TopicRanks's do. In future work it would be preferable to have multiple human annotators which provides an insight into labelling uncertainty and provides a more objective evaluation.
 
     \subsection{Limitations}
-    GEEK still suffers from some limitations that are likely difficult to solve.
+    \gls{geek} still suffers from some limitations that are likely difficult to solve.
 
     \subsubsection{False Keywords}
         Some words are nouns and are used in conversation but do not describe topics. While \gls{geek} is somewhat robust against this, by requiring \glspl{keyphrase} to appear at least twice at least $T_{\text{min}}$ \glspl{utterance} apart, sometimes it fails. An example is the phrase ``attack vector" that Elon Musk uses in the conversation shown in Fig. \ref{fig:GEEK segment}. This phrase is a non-standard way of saying ``point of weakness", but because Elon Musk, and eventually the host Joe Rogan, keep using it, it is detected by \gls{geek} as two \glspl{keyphrase} ``attack" and ``vector". This leads to a wrong segmentation (the red vertical line at $u_{110})$.
