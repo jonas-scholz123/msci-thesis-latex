@@ -3,7 +3,6 @@
 \input{imports}
 \input{glossary}
 
-
 %WORD COUNT STUFF
 \newcommand{\detailtexcount}[1]{%
   \immediate\write18{texcount -merge -sum -q #1.tex output.bbl > #1.wcdetail }%
@@ -43,8 +42,8 @@
 }
 %\fancyhead[L]{\fontsize{10}{12}}
 
-\fancyhead[LE,RO]{\changefont \slshape \rightmark} %section
-\fancyhead[RE,LO]{\changefont \slshape \leftmark} %chapter
+\fancyhead[R]{\changefont \slshape \rightmark} %section
+\fancyhead[L]{\changefont \slshape \leftmark} %chapter
 
 \hypersetup{%
   colorlinks = true,
@@ -118,6 +117,7 @@
 \pagestyle{plain}
 \Urlmuskip=0mu plus 1mu
 \emergencystretch=1em
+
 \printbibliography
 %TC:endignore
 \end{document}

@@ -44,7 +44,7 @@ There are many approaches to topic segmentation that we explore. They are introd
     \subsection{Graph-based Segmentation} 
     Graph-based methods represent conversations as a fully connected weighted graph: nodes represent \glspl{utterance} $u_i$ and the weight of edges between nodes $u_i, u_j$ represent some measure of similarity $\eta_{ij}$ between $u_i, u_j$ (such as the cosine similarity between the two \gls{utterance} \glspl{embedding}, as is layed out in Sec. \ref{ssec: utterance embeddings}). Once the conversation is represented as a graph, a threshold weight $\eta_{\text{min}}$ between edges can be set, below which edges are removed. The remaining clusters of sentences defined by remaining edges give the segmentation of the conversation.\cite{malioutov2006minimum} A minimal example is shown in Fig. \ref{fig: graph seg}.
     
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{graphSeg.pdf}
     \caption{Semantically different \glspl{utterance} have their connecting edge cut. The remaining clusters represent topics.\label{fig: graph seg}}

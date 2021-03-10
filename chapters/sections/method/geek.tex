@@ -3,13 +3,13 @@
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{geek.pdf}
-        \caption{A toy example showing how GEEK works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase}. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
+        \caption{A toy example showing how GEEK works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase} and the range of their effect is determined. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
         d) The topics are the \glspl{keyphrase} in connected components in the graph. They range from the earliest \gls{keyphrase} occurence to the latest. The meaning of the final topic is influenced by all connected \glspl{keyphrase} (shown here as colour mixing).
         }
         \label{fig:geek architecture}
     \end{figure}
 
-We use the TopicRank approach and build upon it to develop an algorithm that both segments and labels topics. We call this improved algorithm the \textbf{G}raph of \textbf{E}mbedded \textbf{E}xtracted \textbf{K}eyphrases algorithm (GEEK). GEEK extracts \glspl{keyphrase}, but uses \glspl{embedding} to achieve a better selection than TopicRank. It then uses embedding-based similarity to determine cohesive sections of the transcript. An example of how GEEK works is shown in Fig. \ref{fig:geek architecture}.
+We use the TopicRank approach and build upon it to develop an algorithm that both segments and labels topics. We call this improved algorithm the \gls{geek}. \gls{geek} extracts \glspl{keyphrase}, but uses \glspl{embedding} to achieve a better selection than TopicRank. It then uses embedding-based similarity to determine cohesive sections of the transcript. An example of how GEEK works is shown in Fig. \ref{fig:geek architecture}.
 
 GEEK is based on the following assumptions:
 
@@ -24,10 +24,10 @@ GEEK is based on the following assumptions:
     The hyperparameters that the user needs to set to use \gls{geek} are as follows:
 
     \newcolumntype{t}{>{\hsize=.15\hsize}X}
-    \newcolumntype{b}{>{\hsize=.7\hsize}X}
-    \begin{table}[h]
+    \newcolumntype{L}{>{\hsize=.7\hsize}X}
+    \begin{table}[H]
         \centering
-        \begin{tabularx}{0.9\textwidth}{| t | b | t |}
+        \begin{tabularx}{0.9\textwidth}{| t | L | t |}
         \hline
         \textbf{Symbol} & \textbf{Description} & \textbf{Chosen Value} \\ \hline
         $\Delta_{\text{max}}$     & The maximum gap between matching \glspl{keyphrase} for them to be considered in the same segment & 11                    \\ \hline
@@ -87,7 +87,7 @@ GEEK is based on the following assumptions:
 
     \subsubsection{Segmentation}
         Even though segmentation is not exactly possible as there are multiple topics that may overlap, by simply placing a topic boundary at the start of the largest topic out of a group of overlapping topics, we can achieve a reasonable approximation. This is visualised in Fig. \ref{fig:GEEK segment}.
-        \begin{figure}[h]
+        \begin{figure}
              \centering
              \begin{subfigure}[b]{\textwidth}
                  \centering

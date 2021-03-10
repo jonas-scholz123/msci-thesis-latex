@@ -1,23 +1,22 @@
 \section{Topic Segmentation Evaluation}
 \subsection{A Lack of Corpora}
-    Large corpora of training data for conversation topic segmentation do not exist, especially within the context of conversations, which causes two issues:
+    In contexts other than conversations, algorithms are evaluated on chapters of medical textbooks\cite{eisenstein2008bayesian, simon2013leveraging}. Section titles are removed from the text and the algorithm is evaluated by how similarly its predicted boundaries are to the original section boundaries.
+    Similar corpora of training data for \textbf{conversational} topic segmentation do not exist which causes two issues:
     \begin{enumerate}
         \item We can not train a \textbf{supervised} \gls{model} to detect boundary changes such as in \cite{joty2013topic}.
         \item Our quantitative evaluation is not representative of all conversations that we analyse and uncertainties are quite high.
     \end{enumerate}
 
 \subsection{Our Evaluation Methods \label{method: segmentation evaluation}}
-    In contexts other than conversations, algorithms are evaluated on chapters of medical textbooks\cite{eisenstein2008bayesian, simon2013leveraging}. Section titles are removed from the text and the algorithm is evaluated by how similarly its predicted boundaries are to the original section boundaries. Unfortunately, no such data exists for conversations.
 
-    \subsubsection{Quantitative Evaluation}
         To quantify segmentation techniques, we annotate a 4 conversation sections (each ca. 250 sentences) by hand. To do this, we read through a transcript and place a boundary indicator in the text where we believe the topic of the conversation has changed. We try to annotate a representative sample of transcripts, but as this is a very time consuming process and conversation structure varies a lot, uncertainties are high and results statistically less significant than desired. We annotate sections from the podcasts shown in Table \ref{table: hand annotated podcasts}. They were chosen because we believe them to represent different types of conversations and a wide range of topics.
 
-        \newcolumntype{b}{X}
-        \newcolumntype{s}{>{\hsize=.5\hsize}X}
+        \newcolumntype{B}{X}
+        \newcolumntype{z}{>{\hsize=.5\hsize}X}
 
        \begin{table}[h]
        \centering
-            \begin{tabularx}{0.9\textwidth}{| s | b | s | }
+            \begin{tabularx}{0.9\textwidth}{| z | B | z | }
             \hline
             \textbf{Podcast Title}       & \textbf{Episode Title}                       & \textbf{Description}      \\ \hline
             Joe Rogan Experience         & \#1470 Elon Musk                             & Casual Conversation       \\ \hline

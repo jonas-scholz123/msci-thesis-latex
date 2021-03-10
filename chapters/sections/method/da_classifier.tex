@@ -7,7 +7,7 @@
 
     \section{Initial Model \label{method: kumar model}}
     
-    \begin{table}[h]
+    \begin{table}
     \centering
         \begin{tabular}{|l|l|}
         \hline
@@ -16,15 +16,22 @@
         Nr of RNN Neurons per Layer  & 300            \\ \hline
         Learning Rate $\alpha$       & 1.0            \\ \hline
         Dropout Rate                 & 0.2            \\ \hline
+        Loss Function $\mathcal{L}$  & CRF-loss\cite{originalCRF} \\ \hline
         \end{tabular}
         \caption{\label{table: da hyperparams} The hyperparameters used in the initial model. }
     \end{table}
     The \gls{model} proposed by IBM Research in \cite{kumar2017dialogue} is a hierarchical Bi-LSTM-CRF \gls{model}, which first encodes \glspl{utterance} using an \gls{embedding} and \gls{lstm} layer and then uses these encoded \glspl{utterance} in a combination with another \gls{lstm} layer and a \gls{crf} layer to classify the \gls{da} of every \gls{utterance}. The entire \gls{model} architecture is displayed in Fig. \ref{fig:kumar_model}. The exact specifications of the model, the hyperparamters, are shown in Table \ref{table: da hyperparams}. The hyperparameter \textit{dropout rate} is a parameter of \gls{rnn} \glspl{neuron} --- during training, with probability equal to the dropout rate, a \gls{neuron} does not fire even though it should. Dropout makes the training process more robust and is disabled in actual predictions\cite{mlTextbook}.
 
-    \begin{figure}[h]
+    \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{kumar.pdf}
-        \caption{a) $N$ \glspl{utterance} $u_i$ are input into the \gls{model} as b) a list of words $w_1 \dots w_{n_i}$. In c), the words are individually embedded into vectors $\mathbf{w_j}$ (see Sec. \ref{ssec: word embeddings}). The first Bi-\gls{rnn} layer (on the word level), d), combines all $n_i$ words within $u_i$ into two vectors of numbers, one for the ``forward" direction and one for the ``backward" direction of the \gls{rnn} (see Sec. \ref{ssec: bidirectional RNN}). In e), these vectors are concatenated into one vector $\mathbf{u_i}$ that can be understood as the \gls{embedding} of the \gls{utterance} $u_i$. In f), these \gls{utterance} \glspl{embedding} are again combined using a bi-directional \gls{rnn} layer, but this time not just the two final states of the ``forward" and ``backward" direction are passed on, but all hidden states $h_i$ are (see Sec. \ref{ssec: outputting hidden states}). In g), a \gls{crf} layer (see Sec. \ref{fig: HMM and CRF}) makes the final classification, which is the sequence of \glspl{da} $\text{DA}_i$ associated with \glspl{utterance} $u_i$ shown in h).}
+        \caption{a) $N$ \glspl{utterance} $u_i$ are input into the \gls{model}. \newline 
+        b) \Glspl{utterance} are split into lists of words $w_j$. \newline 
+        c), $w_j$ are individually embedded into word-\glspl{embedding} $\mathbf{w_j}$ (see Sec. \ref{ssec: word embeddings}).\newline 
+        d) The first Bi-\gls{rnn} layer (on the word level) combines all $\mathbf{w_j}$ within $u_i$ into two vectors of numbers, one for the ``forward" direction and one for the ``backward" direction of the \gls{rnn} (see Sec. \ref{ssec: bidirectional RNN}).\newline 
+        e) These vectors are concatenated into one vector $\mathbf{u_i}$ that can be understood as the \gls{embedding} of the \gls{utterance} $u_i$.\newline 
+        f) \Gls{utterance} \glspl{embedding} $\mathbf{u_i}$ \glspl{embedding} are again combined using a bi-directional \gls{rnn} layer, but this time not just the two final states of the ``forward" and ``backward" direction are passed on, but all hidden states $h_i$ are (see Sec. \ref{ssec: outputting hidden states}).\newline 
+        g)A \gls{crf} layer (see Sec. \ref{fig: HMM and CRF}) makes the final classification, which is the sequence of \glspl{da} $\text{DA}_i$ associated with \glspl{utterance} $u_i$ shown in h).}
         \label{fig:kumar_model}
     \end{figure}
 
@@ -37,7 +44,7 @@
         \subsubsection{Boundary Effects}
             The chunking process leads to unwanted boundary effects: at the boundary of each chunk, the \gls{model} loses the previous (or following) sentence's information. The context is lost. To mitigate this, we introduce a novel method of re-assembly of chunks. We don't only classify a chunk, say $u_{i}$ to $u_{i + 100}$, we also classify an offset chunk, say $u_{i + 50}$ to $u_{i + 150}$. We then re-assemble the classified chunks in a way that ensures that no \textbf{final} classification was made near a false boundary. The process is illustrated in Fig. \ref{fig:chunking process}. Given that we obtain the same accuracy as reported by Kumar et al. ($79.2 \pm 0.3\%$)\cite{kumar2017dialogue} using this method, it is clear that our assumption holds and this method does not significantly diminish the \gls{model}'s accuracy.
 
-    \begin{figure}[h]
+    \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{figures/chunks.pdf}
         \caption{The \glspl{utterance} are split into chunks of 100 twice: once starting at 0 (blue) and once offset, starting at 50 (orange). We classify each chunk independently and overlay them for the final classification so that each of the final \glspl{da} was classified as far from an artificial boundary as possible to minimise context information loss at boundaries.}
@@ -77,7 +84,7 @@
     \begin{figure}[t!]
         \centering
         \includegraphics[width=\textwidth]{confusion_gru.pdf}
-        \caption{The confusion matrix of our final \gls{da} classifier showing the 10 most frequent \glspl{da}. The field in row $i$ with label $d_i$ and column $j$ with label $d_j$ shows the percentage of \glspl{utterance} with true labels $d_i$ being classified as label $d_j$. The diagonal entries represent the percentage of correctly labelled \glspl{utterance}. Uncertainties are of order $0.1\%$ (varying across \gls{da} categories based on frequencies within the test data) and are excluded for clarity.}
+        \caption{The confusion matrix of our final \gls{da} classifier showing the 10 most frequent \glspl{da}. The field in row $i$ with label $d_i$ and column $j$ with label $d_j$ shows the percentage of \glspl{utterance} with true labels $d_i$ being classified as label $d_j$. The diagonal entries represent the percentage of correctly labelled \glspl{utterance}. Uncertainties are of order $0.1\%$ (varying across \gls{da} categories based on frequencies within the test data) and are excluded for clarity. Because we limit the matrix to the 10 most frequent \glspl{da} (and because we round), rows don't sum to 100\%.}
         \label{fig:confusion}
     \end{figure}
 

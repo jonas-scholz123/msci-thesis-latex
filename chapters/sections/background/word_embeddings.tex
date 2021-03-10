@@ -65,7 +65,7 @@
     In the same way that words can be embedded based on a pre-trained set of \glspl{embedding}, sentences can be embedded also. Training the \glspl{embedding} doesn't work in the same way as for words (otherwise every sentence would have to be contained within the corpus for an \gls{embedding} to exist), but the concept is the same. A sentence is represented as a vector in a high-dimensional vector space. This allows a similarity between sentences to be computed as the cosine similarity (see Sec. \ref{ssec: cosine similarity}, Eq. \ref{eq: cosine similarity}). Examples include Google's universal sentence encoder\cite{GoogleEncoder} and Facebook's InferSent\cite{infersent}.
 
     \subsection{Limitations}
-        \begin{figure}[h]
+        \begin{figure}[ht]
             \centering
             \includegraphics{ambiguous_embedding.pdf}
             \caption{Due to appearing frequently in contexts relating to biology, phones and prison, the word \gls{embedding} for the ambiguous word ``cell" is attracted to all three contexts in semantic space. The final \gls{embedding} lies somewhere in between the contexts and is a poor representation for all three meanings of ``cell".}
