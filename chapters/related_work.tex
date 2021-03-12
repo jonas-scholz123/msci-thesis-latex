@@ -2,7 +2,12 @@
 \chapter{Existing Work}
 
 % TODO: Change, no longer doing actual analysis
-While to our knowledge no work exists that statistically analyses conversations on a large scale, the methods of analysis that we employ are common and well established. The first part of our analysis, in which we analyse a conversation as a string of many small \glspl{da} rests on \gls{da} classification and is addressed in Sec. \ref{ssec: da classification}. The second part of our analysis, which is concerned with analysing conversations as a trajectory through a semantic topic-space, uses topic modelling. Previous topic modelling work is explored in Sec. \ref{sec: topic analysis} -- \ref{ssec: topic labelling}.
+%While to our knowledge no work exists that statistically analyses conversations on a large scale, the methods of analysis that we employ are common and well established. The first part of our analysis, in which we analyse a conversation as a string of many small \glspl{da} rests on \gls{da} classification and is addressed in Sec. \ref{ssec: da classification}. The second part of our analysis, which is concerned with analysing conversations as a trajectory through a semantic topic-space, uses topic modelling. Previous topic modelling work is explored in Sec. \ref{sec: topic analysis} -- \ref{ssec: topic labelling}.
+
+In this chapter we introduce previous work within the well-established and active field of \textbf{\gls{da} classification} and within the less active area of \textbf{topic extraction}. We later build upon these methods to build state of the art algorithms within both areas. 
+Methods for \gls{da} classification, in which sentences are automatically matched to their \glspl{da} (e.g. "Hello!" $\rightarrow$ greeting, see Sec. \ref{ssec: DAs}), are introduced in Sec. \ref{ssec: da classification}.
+
+Existing methods for topic modelling, which finds out \textit{which} topics are featured within a conversation and \textit{when}, are introduced in Sec. \ref{sec: topic analysis} -- \ref{ssec: topic labelling}.
 
 \input{chapters/sections/related_work/DA_classification}
 

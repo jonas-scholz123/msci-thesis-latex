@@ -1,12 +1,12 @@
-\section{Topic Analysis \label{sec: topic analysis}}
+\section{Topic Extraction \label{sec: topic analysis}}
 
-While \gls{da} classification is extensively and actively researched specifically within the context of conversations, topic analysis is not. Many techniques that are used for topic analysis rely on well-structured, regular text documents and struggle within the context of conversations. These techniques, and the sparse attempts to apply them to conversations, are summarised in this section.
+While \gls{da} classification is extensively and actively researched specifically within the context of conversations, topic extraction is not. Many techniques that work well in well-structured, regular text documents (such as newspaper articles or scientific papers) struggle within the context of conversations. These techniques, and the sparse attempts to apply them to conversations, are summarised in this section.
 
-We define topics to be semantically cohesive sections of conversation.
 The usual approach to analysing topics in text is
 \begin{enumerate}
     \item Segment the text into its different topics, i.e. determine where a topic changes (Sec. \ref{ssec: topic segmentation}).
     \item Label every segment with a topic, i.e. determine what a given segment is about (Sec. \ref{ssec: topic labelling}).
 \end{enumerate}
 Some methods, such as Purver et al.\cite{purver2006unsupervised}, do both at the same time.
-This type of analysis is commonly used in a wide number of applications, for example in companies' live-chats, that automatically classify customer issues and send them to the most applicable support teams, or in content-sharing sites such as YouTube, that automatically generate tags for posts and videos to improve content recommendation\cite{queryClassification}.
+
+Topic Extraction is used in a wide number of applications, for example in companies' live-chats, that automatically classify customer issues and send them to the most applicable support teams, or in content-sharing sites such as YouTube, that automatically generate tags for posts and videos to improve content recommendation\cite{queryClassification}.

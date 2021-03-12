@@ -2,11 +2,13 @@
     There are two key issues with using \glspl{nn} for text-analysis:
     
     \begin{enumerate}
-    \item \glspl{nn} require equal-length inputs, but words and sentences can have variable lengths.
     \item \glspl{nn} do not speak English. We need to translate the inputs into a language (of numbers) that computers can work with. 
+
+    \item \glspl{nn} require equal-length inputs, but words and sentences can have variable lengths.
     
     %A simple map such as $a \rightarrow 1, b \rightarrow 2 \dots$ also does not work, because the letters making up words do not inherently contain information or carry meaning - the meaning of a word is defined by the language in which it is written. In the same way that a Spanish word carries no meaning to a non-Spanish speaker, computer does not speak english
     \end{enumerate}
-    The first issue is addressed by \glspl{rnn}, see Sec. \ref{ssec: RNNs}.
-    The second issue is addressed by so-called word-\glspl{embedding} (Sec. \ref{ssec: word embeddings}) which lie at the heart of our project and \gls{nlp} in general.
+    The first issue is addressed by word-\glspl{embedding} (Sec. \ref{ssec: word embeddings}), the second by
+    \glspl{rnn}.
+    
     \glsreset{rnn} %rewrite full gls entry next time

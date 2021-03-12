@@ -1,5 +1,5 @@
 
-{\let\clearpage\relax \chapter[Dialogue Act Classification]{Improving Dialogue Act Classification}}
+{\let\clearpage\relax \chapter[Dialogue Act Classification]{Improving Dialogue Act Classification\label{cpt: Method Dialogue Acts}}}
 %\chapter[Dialogue Act Classification]{Improving Dialogue Act Classification}
 %We have three aims:
 %\begin{enumerate}
@@ -9,7 +9,9 @@
 %    \item Apply the improved methods to a large number of conversations to easily enable future work actually analysing said conversations.
 %\end{enumerate}
 
-\gls{da} classification is an active area of research, because it helps speech controlled devices (such as Google Home or Amazon Alexa) identify what the user wants\cite{daApplications}. We select an existing hierarchical bi-directional \gls{lstm} \gls{model} by Kumar et al.\cite{kumar2017dialogue} (for the reasons explained in Sec. \ref{sssec: kumar model}) and modernise it.
+\gls{da} classification is an active area of research, because it helps speech controlled devices (such as Google Home or Amazon Alexa) identify what the user wants\cite{daApplications}. As a reminder, in \gls{da} classification, we want to automatically map sentences to their embeddings, such as "Hello!" $\rightarrow$ question, "Do you live in London?" $\rightarrow$ Yes-or-No Question. We use the SWBD-DAMSL set of \glspl{da} introduced in \ref{table: damsl das}.
+
+To improve \gls{da} classification, we select an existing hierarchical bi-directional \gls{lstm} \gls{model} Kumar et al. at IBM Research\cite{kumar2017dialogue} (for the reasons explained in Sec. \ref{sssec: kumar model}), re-implement it, modernise it and fix a bug. Our methods are described in this section.
 
 %Sections ??? to ??? describes our methods and findings for the first aim, sections ??? to ??? for the second.
 

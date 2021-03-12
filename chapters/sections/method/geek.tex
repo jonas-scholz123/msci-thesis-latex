@@ -3,13 +3,14 @@
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{geek.pdf}
-        \caption{A toy example showing how \gls{geek} works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase} and the range of their effect is determined. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
+        \caption{A toy example showing how GEEK works.\newline a) \Glspl{keyphrase} are extracted as nouns and proper nouns using \gls{pos} tagging (blue) and as named entities using \gls{ner} (orange). The words on a transparent background are discarded because they are not similar to other nearby \glspl{keyphrase}.\newline b) The \glspl{keyphrase} are matched with similar nearby \glspl{keyphrase} and the range of their effect is determined. \newline c) A graph of \glspl{keyphrase} is created based on \gls{keyphrase}-range overlap and similarity. The colour is meant to serve as a visualisation of embeddings (similar colour $\rightarrow$ similar embedding).\newline
         d) The topics are the \glspl{keyphrase} in connected components in the graph. They range from the earliest \gls{keyphrase} occurence to the latest. The meaning of the final topic is influenced by all connected \glspl{keyphrase} (shown here as colour mixing).
         }
         \label{fig:geek architecture}
     \end{figure}
 
-We use the TopicRank approach and build upon it to develop an algorithm that both segments and labels topics. We call this improved algorithm the \gls{geek} algorithm. \gls{geek} extracts \glspl{keyphrase}, but uses \glspl{embedding} to achieve a better selection than TopicRank. It then uses embedding-based similarity to determine cohesive sections of the transcript. An example of how \gls{geek} works is shown in Fig. \ref{fig:geek architecture}.
+We use the TopicRank approach and build upon it to develop an algorithm that both segments and labels topics. We call this improved algorithm the \gls{geek} algorithm. \gls{geek} extracts \glspl{keyphrase}, but uses different criteria to make a different selection than TopicRank.
+It then uses \gls{embedding}-based similarity to determine cohesive sections of the transcript. An example of how \gls{geek} works is shown in Fig. \ref{fig:geek architecture}.
 
 \gls{geek} is based on the following assumptions:
 
@@ -19,23 +20,25 @@ We use the TopicRank approach and build upon it to develop an algorithm that bot
     \item There can be more than one active topic: topics can overlap and smaller sub-topics can be discussed within larger topics.
     \item If the gap between related \glspl{keyphrase} is too large, they do not belong to the same segment.
 \end{enumerate}
-
-    \subsection{Hyperparameters}
-    The hyperparameters that the user needs to set to use \gls{geek} are as follows:
-
-    \newcolumntype{t}{>{\hsize=.15\hsize}X}
-    \newcolumntype{L}{>{\hsize=.7\hsize}X}
-    \begin{table}[H]
-        \centering
-        \begin{tabularx}{0.9\textwidth}{| t | L | t |}
-        \hline
-        \textbf{Symbol} & \textbf{Description} & \textbf{Chosen Value} \\ \hline
-        $\Delta_{\text{max}}$     & The maximum gap between matching \glspl{keyphrase} for them to be considered in the same segment & 11                    \\ \hline
-        $\eta_{\text{min}}$     & The minimum cosine similarity of two word \glspl{embedding} for their words to be considered similar. & 0.55                        \\ \hline
-        $T_{\text{min}}$ & Minimum number of \glspl{utterance} a topic must span. & 3 \\ \hline
-
-        \end{tabularx}
-    \end{table}
+    
+    \vbox{ %don't pagebreak this.
+        \subsection{Hyperparameters}
+        The hyperparameters that the user needs to set to use \gls{geek} are as follows:
+        
+        \newcolumntype{t}{>{\hsize=.15\hsize}X}
+        \newcolumntype{L}{>{\hsize=.7\hsize}X}
+        \begin{table}[H]
+            \centering
+            \begin{tabularx}{0.9\textwidth}{| t | L | t |}
+            \hline
+            \textbf{Symbol} & \textbf{Description} & \textbf{Chosen Value} \\ \hline
+            $\Delta_{\text{max}}$     & The maximum gap between matching \glspl{keyphrase} for them to be considered in the same segment & 11                    \\ \hline
+            $\eta_{\text{min}}$     & The minimum cosine similarity of two word \glspl{embedding} for their words to be considered similar. & 0.55                        \\ \hline
+            $T_{\text{min}}$ & Minimum number of \glspl{utterance} a topic must span. & 3 \\ \hline
+    
+            \end{tabularx}
+        \end{table}
+    }
     
 
     \subsection{Keyword Extraction}
@@ -50,18 +53,17 @@ We use the TopicRank approach and build upon it to develop an algorithm that bot
 
         \subsubsection{Named Entity Recognition}
             We also use the pre-trained state of the art \gls{ner} tagger from the python library Flair\cite{flairNLP}.
-            \Gls{ner} models
+            \Gls{ner} taggers can be written as \glspl{model}:
             \begin{equation}
-              \hat{f}_{\text{ner}}: \mathcal{S} \rightarrow \mathcal{N},
+              \hat{f}_{\text{ner}}: S \rightarrow W_{\text{ne}},
             \end{equation}
-            extract words $\mathcal{N}$ in sequences of words $\mathcal{S}$ that describe a named entity such as a person, company or date and label them accordingly. For example:
-
+            that extract a set of words $W_{\text{ne}}$ from sequences of words $S$ that describe a named entity such as a person, company or date and label them accordingly. For example:
         \begin{align*}
         \text{[Bill Gates, founded, Microsoft, in, 1975]} \rightarrow [& (\text{Bill Gates, person}), \\
                                                                        & (\text{Microsoft, company}), \\
                                                                        & (\text{1975, year})].
         \end{align*}
-        This tagging problem is also approached almost exactly like the \gls{da} tagging from Sec. \ref{ssec: da classification}. And allows us to extract named entities as \glspl{keyphrase}.
+        This tagging problem is approached almost exactly like the \gls{da} tagging from Sec. \ref{ssec: da classification}, and allows us to extract named entities as \glspl{keyphrase}\cite{flairNLP}.
 
         \subsubsection{Post Processing}
             Some words are technically nouns but are unwanted as \glspl{keyphrase}. They include words such as ``dude", ``everything" or ``dope". We manually exclude 89 such words $\mathcal{W}_{man}$ from the \glspl{keyphrase} and also exclude any words that are similar enough to any $w_{man} \in \mathcal{W}_{man}$, where similarity is defined as usual as the cosine similarity of two word \glspl{embedding} and $0.9$ is the minimum cosine similarity for exclusion.
@@ -79,7 +81,7 @@ We use the TopicRank approach and build upon it to develop an algorithm that bot
         \begin{figure}
             \centering
             \includegraphics[width=\textwidth]{joe_rogan_jack_dorsey290_370_topics.pdf}
-            \caption{An excerpt of a conversation between podcast host Joe Rogan and twitter CEO Jack Dorsey. The y-axis is used to display simultaneous topics. Similar \glspl{keyphrase} are grouped together into topics. Topics are colour-coded by mapping \glspl{embedding} to a colour.}
+            \caption{The extracted topics within an excerpt of a conversation between podcast host Joe Rogan and twitter CEO Jack Dorsey. The y-axis is used to display simultaneous topics. Similar \glspl{keyphrase} are grouped together into topics. Topics are colour-coded by mapping \glspl{embedding} to a colour.}
             \label{fig:GEEK final result}
         \end{figure}
 
@@ -92,7 +94,7 @@ We use the TopicRank approach and build upon it to develop an algorithm that bot
              \begin{subfigure}[b]{\textwidth}
                  \centering
                  \includegraphics[width=1\textwidth]{figures/0to100segment_topics.pdf}
-                 \caption{$u_0$ to $u_100$}
+                 \caption{$u_0$ to $u_{100}$}
              \end{subfigure}
              \hfill
              \begin{subfigure}[b]{\textwidth}
@@ -117,7 +119,7 @@ We use the TopicRank approach and build upon it to develop an algorithm that bot
         which is a significant improvement over TopicRank (see Eq. \ref{eq: topic rank accuracy}). It should be noted that only one author annotated selected \glspl{keyphrase}, which is a subjective task. It is expected that \gls{geek}'s accuracy is thus somewhat biased as its assumptions align more with the author's assumptions than TopicRanks's do. In future work it would be preferable to have multiple human annotators which provides an insight into labelling uncertainty and provides a more objective evaluation.
 
     \subsection{Limitations}
-    \gls{geek} still suffers from some limitations that are likely difficult to solve.
+    \gls{geek} still suffers from some limitations, that we briefly outline here.
 
     \subsubsection{False Keywords}
         Some words are nouns and are used in conversation but do not describe topics. While \gls{geek} is somewhat robust against this, by requiring \glspl{keyphrase} to appear at least twice at least $T_{\text{min}}$ \glspl{utterance} apart, sometimes it fails. An example is the phrase ``attack vector" that Elon Musk uses in the conversation shown in Fig. \ref{fig:GEEK segment}. This phrase is a non-standard way of saying ``point of weakness", but because Elon Musk, and eventually the host Joe Rogan, keep using it, it is detected by \gls{geek} as two \glspl{keyphrase} ``attack" and ``vector". This leads to a wrong segmentation (the red vertical line at $u_{110})$.

@@ -5,11 +5,13 @@
         \caption{Using Google's universal sentence encoder, sentences are embedded and their similarity visualised. The colour of the field at (row, column) indicates the similarity between the sentence labels at (row, column). A darker colour indicates a stronger similarity.}
         \label{fig:sentence similarity}
     \end{figure}
-    Using \gls{utterance} \glspl{embedding}, similar sentences can be clustered together, forming topics. Going through the transcript, once the cluster to which a sentence is assigned changes, a topic boundary is set. This theoretically allows for topic segmentation. A visual example showing clusters of similar sentences is shown in Fig. \ref{fig:sentence similarity}.
+    As a first topic segmentation approach, we follow the graph-based technique introduced by Malioutov et al.\cite{malioutov2006minimum} (see Sec. \ref{ssec: topic segmentation}). Using \gls{utterance} \glspl{embedding} to cluster semantically similar sentences, forming topics. Going through the transcript, once the cluster to which a sentence is assigned changes, a topic boundary is set. This theoretically allows for topic segmentation. A visual example showing clusters of similar sentences is shown in Fig. \ref{fig:sentence similarity}.
 
     \subsection{Minimum Cut Graph Based \label{method: minimum cut}}
 
-        Firstly we evaluate the minimum cut based clustering method detailed in Sec. \ref{fig: graph seg} for conversations, in which all \glspl{utterance} above some threshold similarity are clustered. The key limitation within the context of conversation is that certain \glspl{utterance} appear within all topics. Consider the following sample of \glspl{utterance}:
+        Firstly we evaluate the minimum cut based clustering method detailed in Sec. \ref{fig: graph seg} for conversations, in which all \glspl{utterance} above some threshold similarity are clustered.
+        
+        Unfortunately, this approach does not work well: The key limitation within the context of conversation is that certain \glspl{utterance} appear within all topics. Consider the following sample of \glspl{utterance}:
         \begin{table}[h]
             \begin{tabular}{l|l}
             $u_1$     & \textit{Rock music is the best!}                        \\
@@ -20,11 +22,11 @@
             \end{tabular}
         \end{table}
 
-        Even though $u_1$ and $u_{i}$ correctly do not connect, $u_1$ connects to $u_2$, $u_{i}$ connects to $u_{i+1}$ and critically, $u_2$ connects to $u_{i+1}$. This last connection is made because the sentences are similar, in fact everything \textit{except for the topic} matches between these \glspl{utterance}. In conversation, sentences like $u_2$ and $u_{i+1}$ are abundant --- leading to one giant connected component, which is a cluster that contains a large fraction of all nodes. We attempted to fine-tune the cutoff similarity, but either (almost) no sentences end up connected or all of them do.
+        \Glspl{utterance} $u_1$ and $u_2$ connect, $u_{i}$ connects to $u_{i+1}$ and even though $u_1$ and $u_{i}$ correctly do not connect, $u_2$ mistakenly connects to $u_{i+1}$. \color{red} \textbf{TODO: get values}. \color{black} This last connection is made because the sentences are similar, in fact everything \textit{except for the topic} matches between these \glspl{utterance}. In conversation, sentences like $u_2$ and $u_{i+1}$ are abundant --- leading to one giant connected component (a cluster that contains a large fraction of all nodes). We attempted to fine-tune the cutoff similarity, but either (almost) no sentences end up connected or all of them do.
 
 
     \subsection{Other Clustering Methods}
-        Since the cutoff-based approach lead to issues, we try the following clustering methods in an attempt to minimize the vulnerability to falsely merged clusters:
+        Since the cutoff-based approach lead to issues, we try the following clustering methods in an attempt to minimise the vulnerability to falsely merged clusters:
         \begin{itemize}
             \item k-means clustering, in which the algorithm tries to separate samples in k groups of equal variance.
             \item DBSCAN clustering, in which clusters are viewed as areas of high density separated by areas of low density.

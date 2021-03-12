@@ -1,7 +1,7 @@
 \section{TopicRank \label{method: topic rank}}
 
 Utterance \gls{embedding} based methods (Sec. \ref{method: utterance embedding clustering}) as well as \gls{lda}-based methods (Sec. \ref{method: LDA} are somewhat ineffective for the segmentation of conversation in part because they assume that every word in every \gls{utterance} contributes to the topic of the conversation, which is false.
-TopicRank\cite{bougouin-etal-2013-topicrank} (see Sec. \ref{ssec: keyphrase extraction}) offers a promising alternative approach: it first extracts \glspl{keyphrase} that are likely to represent topics and discards the rest.
+TopicRank\cite{bougouin-etal-2013-topicrank} (see Sec. \ref{ssec: keyphrase extraction}) offers a promising alternative approach: it extracts \glspl{keyphrase} that are likely to represent topics and discards the rest.
 
 \subsection{Evaluation}
 \begin{figure}
@@ -32,5 +32,4 @@ Another issue is that \glspl{keyphrase} are often not repeated but still underst
     $u_2$     & \textit{Yeah I've got a cat.}                        \\
     \end{tabular}
 \end{table}
-
 The word ``pet" is not repeated  but from the context of the conversation it is clear that the topic is still ``pets". To improve the topic matching, we thus need to match semantically \textbf{similar} words instead of just matching equal words.

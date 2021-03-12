@@ -16,11 +16,11 @@
 
 
 
-    The \glspl{model} used for supervised learning throughout this project are called \glspl{nn}. They are flexible information processing architectures (loosely) inspired by the network of \glspl{neuron} in the human brain. They take n-dimensional input tensors $X$, and output m-dimensional output tensors $Y$\footnote{Because $X$ and $Y$ can be a tensors of any rank, we do not use vector/matrix notation and always refer to them as $X$ and $Y$.}. %It should be noted that \textit{tensor} does not refer to Lorentz-tensors but simply to n-dimensional data-containers.
+    The \glspl{model} used for supervised learning throughout this project are called \glspl{nn}. They are flexible information processing architectures (loosely) inspired by the network of \glspl{neuron} in the human brain. They take n-dimensional input tensors $X$, and output m-dimensional tensors $Y$. %It should be noted that \textit{tensor} does not refer to Lorentz-tensors but simply to n-dimensional data-containers.
     %It is not strictly necessary to understand the functionality of \glspl{nn} to understand the rest of the project, simply noting that \glspl{nn} are flexible functions $\hat{f}_{\theta} : X \rightarrow Y$ that can be trained to process information in the desired way using labelled training data $(X, Y)$ is enough. A quick introduction is however included for completeness.
 
     \subsection{Neurons}
-        \Glspl{nn} are a collection of connected nodes called \textbf{\glspl{neuron}} that are sequentially organised into a number of layers. Each \gls{neuron} contains a set of weights $w_i$ and a set of biases $b_i$ with $i \in [1, N_{in}]$, where $N_{in}$ is the number of inputs to that \gls{neuron}. A \gls{neuron} in layer $l$ takes inputs $a_i^{(l-1)}$ from the previous layer $l-1$ and calculates its output as a weighted sum normalised by a non-linear \textit{activation function} $\sigma$ (see Sec. \ref{ssec: activation function}):
+        \Glspl{nn} are a collection of connected nodes called \textbf{\glspl{neuron}} that are sequentially organised into a number of layers. Each \gls{neuron} contains a set of weights $w_i$\footnote{In this thesis, we use $w_i$ both for words and for weights, but due to context, it should be clear which is meant} and a set of biases $b_i$ with $i \in [1, N_{in}]$, where $N_{in}$ is the number of inputs to that \gls{neuron}. A \gls{neuron} in layer $l$ takes inputs $a_i^{(l-1)}$ from the previous layer $l-1$ and calculates its output as a weighted sum normalised by a non-linear \textit{activation function} $\sigma$ (see Sec. \ref{ssec: activation function}):
 
         \begin{equation}
             \label{eq: feed forward}
@@ -32,8 +32,7 @@
         A simple example of a \gls{neuron} is shown in Fig. \ref{subfig: neuron}.
 
     \subsection{Layers}
-        \glspl{nn} are composed of multiple layers of multiple \glspl{neuron}. In many \glspl{nn}, every \gls{neuron} in layer $l$ is connected to every \gls{neuron} in the next layer $l + 1$. We assume that this is the general case within this section. This allows for the use of linear algebra notation to simplify what each layer does.
-
+        \glspl{nn} are composed of multiple connected layers of multiple \glspl{neuron}. %In many \glspl{nn}, every \gls{neuron} in layer $l$ is connected to every \gls{neuron} in the next layer $l + 1$. We assume that this is the general case within this section. This allows for the use of linear algebra notation to simplify what each layer does.
         Writing the input vector of layer $l$ as $\mathbf{a}^{(l)}$, the weight matrix, containing all the weights of a \gls{neuron} (column) for all \glspl{neuron} in a layer (row) as $W$ and the vector of biases of all \glspl{neuron} in a layer as $\mathbf{b}$ allows us to write the forward pass through each layer as
 
         \begin{equation}
@@ -71,11 +70,11 @@
 
         \subsection{Activation Functions \label{ssec: activation function}}
 
-        There are a number of different choices for the activation function $\sigma$. Most activation functions normalise values to lie within some fixed interval $(a_{min}, a_{max})$, i.e.
+        There are a number of different choices for the activation function $\sigma$. Most activation functions normalise \gls{neuron} outputs to lie within some fixed interval $(a_{min}, a_{max})$, i.e.
         \begin{equation}
-        \sigma : x \rightarrow y, \hspace{3em} x \in [-\infty, \infty], y \in (a_{min}, a_{max}).
+        \sigma : a_{\text{raw}} \rightarrow a_{\text{norm}}, \quad a_{\text{raw}} \in [-\infty, \infty], \: a_{\text{norm}} \in (a_{\text{min}}, a_{\text{max}}).
         \end{equation}
-        Examples for $\sigma$ include $\tanh{x}$, $1/(1 + e^{-x})$, or the Heaviside step-function, each of which is used for different purposes.
+        Examples for $\sigma$ include $\tanh{x}$, $1/(1 + e^{-x})$, or the Heaviside step-function, each of which is used for different purposes\cite{mlTextbook}.
 
         The normalisation provided by the activation function means that a small number of \glspl{neuron} can not dominate the final outcomes too heavily (known as the ``exploding gradients problem"). The second effect of these functions is the non-linearity they introduce, allowing for non-linear \glspl{model} for non-linear problems\cite{mlTextbook}.
 
@@ -83,12 +82,12 @@
         To train the \gls{nn} is to determine a set of parameters $\theta$ that make the \gls{model} map $X \rightarrow \hat{Y}$ in such a way that matches the provided \textit{true labels} $Y$. This is approached as an optimisation problem, where the quantity minimised is called the loss\cite{mlTextbook}.
 
         \subsubsection{Loss Function}
-            The loss function maps predicted labels and true labels to the so-called loss $L$: \[\mathcal{L} : \hat{Y}, Y \rightarrow L.\] $L$ is a measure of goodness of fit between the \gls{model}'s predictions and the true labels. One commonly used example is the mean-squared-error as the loss function:
+            The loss function maps sets of predicted labels, $\mathcal{\hat{Y}}$, and true labels, $\mathcal{Y}$ to the so-called loss $L$: \[\mathcal{L} : \hat{\mathcal{Y}}, \mathcal{Y} \rightarrow L.\] $L$ is a measure of goodness of fit between the \gls{model}'s predictions and the true labels. One commonly used example is the mean-squared-error as the loss function:
             \begin{equation}
                 \mathcal{L} = \frac{\sum_{i = 1}^{N_d}(Y_i - \hat{Y}_i)^2}{N_d}, \hspace{2em} \hat{Y}_i = \hat{f}_\theta(X_i),
             \end{equation}
-            where the sum is over all $N_d$ true data points $(X_i, Y_i)$.
-            Since $\hat{Y}$ depends on $\theta$, $\mathcal{L} = \mathcal{L}(\theta)$. Since $\mathcal{L}$ and $\sigma$ are both differentiable functions, partial derivatives of $\mathcal{L}$ with respect to $\theta$ can be calculated.
+            where the sum is over all $N_d$ true data points $(X_i, Y_i) \in \mathcal{X}, \mathcal{Y}$.
+            Since $\hat{Y}$ depends on $\theta$, $\mathcal{L} = \mathcal{L}(\theta)$ and since $\mathcal{L}$ and $\sigma$ are both differentiable functions, partial derivatives of $\mathcal{L}$ with respect to $\theta$ can be calculated.
 
         \subsubsection{Gradient Descent}
             By computing the gradient of $\nabla_\theta \mathcal{L}$ with respect to $\theta$, and slowly moving all weights towards the minimum along this gradient, a set of weights that minimises the $\mathcal{L}$ (and thus optimises the prediction) can be found. Writing all parameters $\theta$ as a vector $\boldsymbol{\theta}$, this gradient descent process can be written succinctly as

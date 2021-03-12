@@ -9,7 +9,7 @@
 
 \subsection{Our Evaluation Methods \label{method: segmentation evaluation}}
 
-        To quantify segmentation techniques, we annotate a 4 conversation sections (each ca. 250 sentences) by hand. To do this, we read through a transcript and place a boundary indicator in the text where we believe the topic of the conversation has changed. We try to annotate a representative sample of transcripts, but as this is a very time consuming process and conversation structure varies a lot, uncertainties are high and results statistically less significant than desired. We annotate sections from the podcasts shown in Table \ref{table: hand annotated podcasts}. They were chosen because we believe them to represent different types of conversations and a wide range of topics.
+        To quantify segmentation techniques, we annotate 4 conversation sections (each ca. 250 sentences) by hand. To do this, we read through a transcript and place a boundary indicator in the text where we believe the topic of the conversation has changed. We try to annotate a representative sample of transcripts, but as this is a very time consuming process and conversation structure varies a lot, uncertainties are high and results statistically less significant than desired. We annotate sections from the podcasts shown in Table \ref{table: hand annotated podcasts}. They were chosen because we believe them to represent different types of conversations and a wide range of topics.
 
         \newcolumntype{B}{X}
         \newcolumntype{z}{>{\hsize=.5\hsize}X}
@@ -32,7 +32,7 @@
     We use the WindowDiff measure\cite{pevzner2002critique}, $w_d$ to rate segmentation. It moves a window of size $\Delta u$ across the segmented text and penalises the algorithm whenever the number of segmentation boundaries within the window does not match the ``true" (i.e. human annotated) number of boundaries for that window. Thus, a lower $w_d$ is better. We choose $\Delta u$ to be half the size of average segments in the true segmentation as is typical in the literature\cite{purver2006unsupervised}\cite{eisenstein2008bayesian}.
 
     \subsubsection{Future Improvements}
-    For future research, we propose the creation of a data set similar to the medical textbook but for conversations, based on YouTube transcriptions:
+    For future research, we propose the creation of a conversation segmentation data set based on YouTube transcriptions:
     The video sharing platform YouTube allows video creators to split their video into segments called ``chapters"\cite{YoutubeChapters}. Some content creators, such as podcast host and artificial intelligence researcher Lex Fridman\cite{LexFridmanYoutube}, use these chapters to label topics. We hypothesise that if videos of conversations were transcribed and annotated with their ``chapter" titles, they could be used as a training set and evaluation set for topic segmentation in conversation.
 
 

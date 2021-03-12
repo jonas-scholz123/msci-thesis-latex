@@ -1,6 +1,8 @@
 \section{Latent Dirichlet Allocation \label{ssec: LDA}}
-    \Gls{lda}\cite{blei2003latent} is the most common method for topic modelling. It was initially designed to model the topics of \textit{documents} within a \textit{corpus}, such as newspaper articles within an archive of newspapers. \gls{lda} is then capable of identifying words belonging to the same topic. The number of topics $k$ is a parameter of \gls{lda} and is set by the user.
-    Within the context of conversations, the \textit{documents} are the conversation transcripts and the \textit{corpus} is the set of all transcripts.
+    \Gls{lda}\cite{blei2003latent} is the most common method for topic modelling. It was initially designed to model the topics of \textit{documents} within a \textit{corpus}, such as newspaper articles within an archive of newspapers. 
+    Within the context of conversations, the \textit{documents} are the conversation transcripts and the \textit{corpus} is the set of all transcripts. In theory, given such a set of transcripts, \gls{lda} is then capable of identifying which words belong to which topic.
+    
+    %The number of topics $k$ is a parameter of \gls{lda} and is set by the user.
 
     \gls{lda} is a \textit{generative model}, which makes the following assumptions about how a document is generated: There are $k$ topics that any word can be about e.g. $k=3$, where the topics are music, cooking and politics. Each of these topics is made up by the following words with an associated probability of appearing:
     \begin{align*}
@@ -8,7 +10,6 @@
         \textbf{Cooking:    }& \text{[(steak, 2.0\%), (dinner, 1.2\%), (knife, 1.0\%), (delicious, 0.6\%), \dots]}\\
         \textbf{Politics:   }& \text{[(Senate, 2.2\%), (MP, 1.8\%), (Trump, 0.9\%), (debating, 0.3\%), \dots]}.
     \end{align*}
-
     Now, a document (such as a podcast transcript) is generated in the following way:
 
     \begin{enumerate}
@@ -30,7 +31,7 @@
         p(D \mid \alpha, \beta)=\prod_{d=1}^{M} \int p\left(T_{d} \mid \alpha\right)\left(\prod_{n=1}^{N_{d}} \sum_{z_{d n}} p\left(z_{d n} \mid T_{d}\right) p\left(w_{d n} \mid z_{d n}, \beta\right)\right) d T_{d},
     \end{equation}
 
-    where $\alpha$ and $\beta$ are the parameters we would like to determine,
+    where $\alpha$ and $\beta$ are the parameters to be determined,
     the first product is over all $M$ documents $d$,
     the integral is over all possible sets (and probabilities) of topics $T_d$ included in $d$,
     the second product is over all $N_d$ words that document $d$ contains, where $w_n$ is the $n^{th}$ word.

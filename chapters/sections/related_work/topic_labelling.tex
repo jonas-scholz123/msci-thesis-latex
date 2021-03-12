@@ -1,10 +1,10 @@
 \section{Topic Labelling \label{ssec: topic labelling}}
 
-Once a document has been segmented into semantically similar regions, for most tasks, they need to be labelled. There are two approaches to this:
+Once a document has been segmented into semantically similar regions, for most tasks, we want to then know what these segments are about. There are two approaches to this:
 
 \begin{enumerate}
-    \item Supervised text classification, where every text is labelled with one (or multiple) topic-labels from a \textbf{predetermined set}\cite{surverTextClassification}. For example, one could label a newspaper article with a label from the set \{politics, sports, weather, finance \dots\}.
-    \item Unsupervised topic modelling, where topic-labels are sets of words \textbf{contained within the document itself} and need to first be extracted.
+    \item Supervised topic labelling, where every text is labelled with one (or multiple) topic-labels from a \textbf{predetermined set}\cite{surverTextClassification}. For example, one could label a newspaper article with a label from the set \{politics, sports, weather, finance \dots\}.
+    \item Unsupervised topic extraction, where topic-labels are sets of words \textbf{contained within the document itself} and need to first be extracted.
 \end{enumerate}
 
-Text classification is often more accurate, but requires the user to impose a finite set of topics that a section can belong to. We explicitly want to avoid imposing a finite set of topics onto the conversations we analyse, so our analysis falls into the area of topic modelling. Sec. \ref{ssec: keyphrase extraction} presents one approach based on the extraction of \glspl{keyphrase} from the text, \ref{ssec: LDA} presents another approach based on Bayesian modelling. The latter combines segmentation and labelling.
+Text classification is often more accurate\cite{surverTextClassification}, but requires the user to impose a finite set of topics that a section can belong to. We explicitly want to avoid imposing a finite set of topics onto the conversations we analyse, so our analysis falls into the area of topic extraction. Sec. \ref{ssec: keyphrase extraction} presents one approach based on the extraction of \glspl{keyphrase} from the text, \ref{ssec: LDA} presents another approach based on Bayesian modelling. The latter combines both segmentation and labelling\cite{purver2006unsupervised, eisenstein2008bayesian}.

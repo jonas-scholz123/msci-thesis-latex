@@ -8,7 +8,6 @@
         \item \textbf{The car wash} was out of order.
         \item She kindly offered water to \textbf{the gardener working in the hot sun.}
     \end{itemize}
-
     These phrases are identified using \gls{pos} tagging.
         \subsection{Part of Speech Tagging \label{sssec: POS tagging}}
 
@@ -16,17 +15,17 @@
         \begin{equation}
           \hat{f}_{\text{pos}}: \mathcal{S} \rightarrow \mathcal{P},
         \end{equation}
-        that label sequences of words $\mathcal{S}$(such as the words in a sentence) with their appropriate grammatical function $\mathcal{P}$, known as their part of speech tag. For example:
+        that label sequences of words $W$(such as the words in a sentence) with their appropriate grammatical function $\mathcal{P}$, known as their \gls{pos} tag. For example:
 
         \begin{equation*}
         \text{[The, house, is, green] $\rightarrow$ [article, noun, verb, adjective]}.
         \end{equation*}
-        This tagging problem is approached almost exactly like the \gls{da} tagging from Sec. \ref{ssec: da classification}.
+        This tagging problem is approached almost exactly like the \gls{da} tagging from Sec. \ref{ssec: da classification}\cite{flairNLP}.
 
 
         \subsection{Topic Clustering}
 
-        \Gls{keyphrase}-candidates are grouped into ``topics" if they share at least 25\% of words, excluding stop-words (which are words that don't add meaning, such as ``the").\cite{bougouin-etal-2013-topicrank}
+        \Gls{keyphrase}-candidates are grouped into ``topics" if they share at least 25\% of words, excluding stop-words (which are words that don't add meaning, such as ``the")\cite{bougouin-etal-2013-topicrank}.
 
         \subsection{Graph-Based Ranking}
         After \gls{keyphrase}-candidates $c_i$ are extracted, the whole document is represented by a complete graph $G = (V, E)$, in which the vertices $V$ are topics $t_i$ and edges $E$ between two topics $t_i$ and $t_j$ are weighted according to the strength of their semantic relation. Here, two topics have a strong semantic relation if they appear close to each other in the document. Formally, the weights are defined to be
